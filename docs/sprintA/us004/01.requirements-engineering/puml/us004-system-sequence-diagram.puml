@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 004
+
+autonumber
+
+actor "Owner" as Owner
+participant ":System" as System
+
+activate Owner
+
+    Owner -> System : Asks to list a new property
+    activate System
+
+        System --> Owner : Shows property category list and asks to select one
+    deactivate System
+
+    Owner -> System : Selects a property category
+    activate System
+
+        System --> Owner : Requests data
+    deactivate System
+
+    Owner -> System : Types requested data
+    activate System
+
+        System --> Owner : Shows selected category and requested data
+    deactivate System
+
+    Owner -> System : Submits data
+    activate System
+
+        System --> Owner : Shows operation success
+    deactivate System
+@enduml

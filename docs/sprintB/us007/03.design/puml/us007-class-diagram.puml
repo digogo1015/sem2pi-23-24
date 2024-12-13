@@ -1,0 +1,91 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class Client {
+    - String name
+    - String telephoneNumber
+    - Email email
+    - PassportCard passportCardNumber
+    - SocialSecurityCard taxNumber
+    - Address address
+
+    + Client(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber)
+}
+
+class ClientRepository {
+    + ManageClient(clientRepository)
+    - addClient(client)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getClientRepository()
+}
+
+class RegisterClientController {
+    + RegisterClientController(manageClientRepository)
+    + registerUser(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, password)
+}
+
+class RegisterClientUI {
+}
+
+
+class ManageClientRepository {
+    + ManageClient(clientRepository)
+    + registerUser(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, password)
+    -validateClient(client)
+}
+
+
+RegisterClientUI .down.> RegisterClientController
+
+Repositories -> Repositories : instance
+
+RegisterClientController ..> ManageClientRepository
+
+ManageClientRepository ..> Repositories : repositories
+
+Repositories --> "1" ClientRepository
+
+ManageClientRepository ..> ClientRepository
+
+ManageClientRepository "1" --> "*" Client
+
+ClientRepository "1" --> "*" Client
+
+
+
+'RegisterEmployeeController .> Repositories : repositories
+
+'Repositories --> "1" StoreRepository
+'Repositories --> "1" RoleRepository
+'Repositories --> "1" EmployeeRepository
+
+'RegisterEmployeeController ..> StoreRepository : StoreRepository
+'RegisterEmployeeController ..> RoleRepository : RoleRepository
+'RegisterEmployeeController ..> EmployeeRepository : EmployeeRepository
+'StoreRepository "1" --> "*" Store : store
+'RoleRepository "1" --> "*" Role : role
+
+'RegisterEmployeeController ...> Store
+'RegisterEmployeeController ...> Role
+
+'EmployeeRepository --> Employee : employee
+
+'Employee "1" --> "1" Store : store
+'Employee "1" --> "1..*" Role : role
+
+
+
+
+@enduml

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="631.0" prefWidth="722.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.MultipleRegressionController">
+   <children>
+      <Label layoutX="254.0" layoutY="27.0" text="Multiple  Regression ">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="regressionInfo" layoutX="3.0" layoutY="277.0" prefHeight="169.0" prefWidth="711.0" />
+      <Label fx:id="label" layoutX="39.0" layoutY="64.0" prefHeight="84.0" prefWidth="654.0" />
+      <TextField fx:id="ICBox" layoutX="411.0" layoutY="185.0" prefHeight="26.0" prefWidth="97.0" />
+      <TextField fx:id="beta" layoutX="575.0" layoutY="185.0" prefHeight="26.0" prefWidth="98.0" />
+      <TextField layoutX="52.0" layoutY="185.0" prefHeight="26.0" prefWidth="59.0" fx:id="x1" />
+      <Label layoutX="557.0" layoutY="163.0" prefHeight="18.0" prefWidth="134.0" text="Regression Coefficient" />
+      <Label layoutX="408.0" layoutY="164.0" text="Confidence Interval" />
+      <Label layoutX="76.0" layoutY="164.0" text="x1" />
+      <Button fx:id="goBack" layoutY="1.0" mnemonicParsing="false" onAction="#switchScene" text="Go Back" />
+      <Label layoutX="127.0" layoutY="146.0" text="For predeiction :" />
+      <TextField layoutX="127.0" layoutY="185.0" prefHeight="26.0" prefWidth="59.0" fx:id="x2" />
+      <TextField layoutX="201.0" layoutY="185.0" prefHeight="26.0" prefWidth="59.0" fx:id="x3" />
+      <TextField layoutX="81.0" layoutY="229.0" prefHeight="26.0" prefWidth="59.0" fx:id="x4" />
+      <TextField layoutX="171.0" layoutY="229.0" prefHeight="26.0" prefWidth="59.0" fx:id="x5" />
+      <Label layoutX="151.0" layoutY="164.0" text="x2" />
+      <Label layoutX="224.0" layoutY="164.0" text="x3" />
+      <Label layoutX="105.0" layoutY="211.0" text="x4" />
+      <Label layoutX="195.0" layoutY="211.0" text="x5" />
+      <ComboBox fx:id="comb1" layoutX="285.0" layoutY="227.0" onAction="#displayInfo" prefWidth="150.0" />
+      <TableView fx:id="Anova" layoutX="38.0" layoutY="461.0" prefHeight="130.0" prefWidth="642.0">
+         <columns>
+            <TableColumn fx:id="col1" prefWidth="114.40002727508545" text="Source of Variation" />
+            <TableColumn fx:id="col2" prefWidth="139.99996948242188" text="Quadratic Sum" />
+            <TableColumn fx:id="col3" prefWidth="120.0" text="Degrees of Freedom" />
+            <TableColumn fx:id="col4" prefWidth="138.4000244140625" text="Quadratic Avarage" />
+            <TableColumn fx:id="col5" prefWidth="131.20001220703125" text="f Test Statistic" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>

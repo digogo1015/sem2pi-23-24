@@ -1,0 +1,88 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client{}
+
+class PropertyVisit{
+dateOfVisit
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+class Agent {}
+
+class VisitRequest{
+timeToStartVisit
+timeToEndVisit
+dateOfVisit
+dateOfRequest
+}
+
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+
+class Notification{
+}
+
+class Email{
+message
+}
+
+class Address{
+street
+state
+district
+city
+zipcode
+}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+VisitRequest"*" --l "1"Client: requests <
+VisitRequest"*" --l "1"Agent: validates <
+VisitRequest"*" --l "1"Agent: responds <
+VisitRequest "*"--r "1"Advertisement : associated with >
+
+PropertyVisit"*" --r "1"Agent: organizes <
+PropertyVisit"*" -- "1"Client: participates in <
+
+Agent "1" -- "*" Email : sends >
+Email "1" -- "1" Notification : derives <
+
+
+Person <|--r Employee
+Person <|--  Client
+Role"1" -u "*"Employee: defines >
+Role <|-- Agent
+
+Notification "*" -- "1" Client : receives <
+
+Property"1" --u "1"Address: located at >
+Property"1" -- "1"AdvertisementRequest: describes <
+AdvertisementRequest"1" --d "1" Advertisement: derives from <
+PropertyVisit "1" -- "1" VisitRequest : derives from >
+
+@enduml

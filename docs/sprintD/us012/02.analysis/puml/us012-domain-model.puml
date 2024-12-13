@@ -1,0 +1,99 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide circle
+hide empty members
+
+class Store {
+designation
+emailAddress
+telephoneNumber
+}
+
+
+class SystemAdministrator {}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+class TypeOfBusiness{
+designation
+}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+class Residence {
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+}
+
+class House{
+existenceOfBasement
+existenceOfInhabitableLoft
+sunExposure
+}
+
+class Address{
+street
+state
+district
+city
+zipcode
+}
+
+class Equipment {
+designation
+}
+
+class TypeOfCommission{
+designation
+}
+
+class TypeOfProperty{
+designation
+}
+
+class Commission{
+value
+}
+
+
+
+SystemAdministrator "1" ---d "*" LegacyFile : Imports >
+Advertisement "*" --u "1" LegacyFile : contains <
+PurchaseOrder "*" -- "1"Advertisement : associated with >
+AdvertisementRequest"*" -- "1" TypeOfBusiness: present in <
+AdvertisementRequest"1" -- "1" Advertisement: derives from <
+Property"1" -- "1"AdvertisementRequest: describes <
+Property"1" -- "1"Address: located at >
+Property  <|-- Residence
+Property"*" --l "1"TypeOfProperty: characterized by >
+Residence"1" -- "*"Equipment : contains >
+Residence <|-- House
+Commission"1" --u "1"Advertisement: present in >
+Address"1" -- "1"Store: located at <
+Commission"*" --l "1"TypeOfCommission: characterized by >
+
+
+
+
+
+
+
+
+
+@enduml

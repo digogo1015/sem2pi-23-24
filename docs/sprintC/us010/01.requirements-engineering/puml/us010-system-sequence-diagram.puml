@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 010
+
+autonumber
+
+actor "Client" as Client
+participant ":System" as System
+
+activate Client
+
+    Client -> System : asks to show advertisement list
+    activate System
+
+        System --> Client : displays list of advertisements and selects one
+    deactivate System
+
+    Client -> System : requests data(price)
+    activate System
+
+        System --> Client : types requested data
+    deactivate System
+
+    Client -> System : submits data
+    activate System
+
+        System --> Client : shows operation success
+    deactivate System
+@enduml

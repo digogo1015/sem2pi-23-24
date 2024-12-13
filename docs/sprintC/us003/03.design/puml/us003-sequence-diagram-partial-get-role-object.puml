@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+
+participant "manageRoleRepository:\nManageRoleRepository" as MaRole
+participant "roleRepository:\nRoleRepository" as RoleRep
+
+autonumber 17
+
+
+        -> MaRole : getRoleByOption(roleOption)
+
+        autonumber 17.1
+       activate MaRole
+       group Get Role Object
+
+
+       MaRole -> RoleRep : getRoleByOption(roleOption)
+       activate RoleRep
+
+       RoleRep --> MaRole : role
+       deactivate RoleRep
+
+       end
+       autonumber 18
+
+       <-- MaRole : role
+       deactivate MaRole
+
+
+@enduml

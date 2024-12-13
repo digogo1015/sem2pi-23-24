@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 7
+
+participant ":CreateAdvertisementForPropertyController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+
+-> CTRL : getTypeOfCommission()
+autonumber 7.1
+                        activate CTRL
+
+                            CTRL -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> CTRL: repositories
+                                deactivate RepositorySingleton
+
+                                CTRL -> PLAT : getTypeOfCommission()
+                                activate PLAT
+
+                                PLAT --> CTRL: TypeOfCommissionRepository
+                                deactivate PLAT
+
+                                CTRL -> typeOfCommissionRepository : getTypeOfCommission()
+                                activate typeOfCommissionRepository
+
+                                typeOfCommissionRepository --> CTRL : TypeOfCommissionList
+                                deactivate typeOfCommissionRepository
+                                autonumber 8
+                            <- CTRL : TypeOfCommissionList
+                        deactivate CTRL
+
+
+@enduml

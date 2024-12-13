@@ -1,0 +1,169 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+'left to right direction
+
+
+class ListPropertyUI {}
+
+class ListPropertyController {
+    + ListPropertyController(filterRepository, propertyRepository)
+    + getFilters()
+    + listProperties(typeOfBusiness,typeOfProperty,\nnumberOfBedrooms,sortingCriteria)
+    - getListOfPropertiesByFilters(typeOfBusiness, \ntypeOfProperty, numberOfBedrooms, sortingCriteria)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getPropertyRepository()
+    + getFilterRepository()
+}
+
+
+
+class SortingCriteria{}
+
+class ComparatorAscendingPrice{
+    + compare()
+}
+
+class ComparatorDescendingPrice{
+    + compare()
+}
+
+class ComparatorCityAlphabetic{
+    + compare()
+}
+
+class ComparatorCityAlphabeticReverse{
+    + compare()
+}
+
+class ComparatorStateAlphabetic{
+    + compare()
+}
+
+class ComparatorStateAlphabeticReverse{
+    + compare()
+}
+
+class ManageAdvertisement {
+    + getProperties()
+    + getSortedListByFilters(typeOfBusiness,\ntypeOfProperty,numberOfBedrooms, sortingMethod)
+    + getListByFilters(typeOfBusiness, \ntypeOfProperty, numberOfBedrooms, sortingCriteria)
+    + getSortedList(list, sortingCriteria)
+}
+
+class ManageFilter {
+    + getProperties()
+    + getSortedListByFilters(typeOfBusiness,\ntypeOfProperty,numberOfBedrooms, sortingMethod)
+    + getListByFilters(typeOfBusiness, \ntypeOfProperty, numberOfBedrooms, sortingCriteria)
+    + getSortedList(list, sortingCriteria)
+}
+
+class AdvertisementRepository{
+    + getAdvertisements()
+}
+
+class FilterRepository{
+
+}
+
+class Advertisement {
+    -String dateOfAdvertisement
+}
+
+class Request {
+    -double price
+    -String dateOfRequest
+}
+
+class PropertyInfo{
+    - double area
+    - double distCityCenter
+}
+
+class Address{
+    -String State
+    -String City
+    -String District
+}
+
+class Photograph {
+    -String URI
+}
+
+class Land{
+
+}
+
+class ResidenceInfo {
+    - int numberOfBathrooms
+    - int numberOfBedrooms
+    - int numberOfParkingSpaces
+}
+
+class Equipment {
+    -String designation
+}
+
+class House {
+    -boolean loft
+    -boolean basement
+    -String sunExposer
+}
+
+class Apartment{}
+
+
+ListPropertyUI ..down> ListPropertyController
+'Repositories -> Repositories : instance
+
+ListPropertyController ..right> Repositories : repositories
+ListPropertyController ..down> ManageAdvertisement : manages
+ListPropertyController ..down> ManageFilter : manages
+
+FilterRepository --right> "1" SortingCriteria
+FilterRepository --> "1" TypeOfBusiness
+FilterRepository --> "1" TypeOfProperty
+FilterRepository --left> "1" NumberOfBedroomsRepository
+Repositories --> "1" FilterRepository
+Repositories --> "1" AdvertisementRepository
+'Repositories --left> "1" SortingCriteria
+
+SortingCriteria --up> ComparatorAscendingPrice
+SortingCriteria --up> ComparatorDescendingPrice
+SortingCriteria --right> ComparatorCityAlphabetic
+SortingCriteria --> ComparatorCityAlphabeticReverse
+SortingCriteria --down> ComparatorStateAlphabetic
+SortingCriteria --up> ComparatorStateAlphabeticReverse
+
+ManageFilter ..> Repositories
+ManageFilter ..> FilterRepository : filterRepository
+
+
+ManageAdvertisement ..> AdvertisementRepository : advertisementRepository
+ManageAdvertisement ..> Repositories
+AdvertisementRepository --> Advertisement
+
+Advertisement --> Request
+
+Request --> PropertyInfo
+
+PropertyInfo --> ResidenceInfo
+PropertyInfo --right> Photograph
+PropertyInfo --left> Address
+PropertyInfo --> Land
+
+ResidenceInfo --left> Equipment
+ResidenceInfo --> House
+ResidenceInfo --> Apartment
+
+
+@enduml

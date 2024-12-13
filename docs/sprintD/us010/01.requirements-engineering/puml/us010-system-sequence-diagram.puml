@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 010
+
+autonumber
+
+actor "Client" as Client
+participant ":System" as System
+
+activate Client
+
+    Client -> System : asks to show property list
+    activate System
+
+        System --> Client : shows list of properties and request's selected data (one of the properties)
+    deactivate System
+
+    Client -> System : selects one property
+    activate System
+
+        System --> Client : shows info and a menu about the property chosen and asks for an option(Buy Property Option)
+    deactivate System
+
+    Client -> System : selects Buy Property Option
+    activate System
+
+        System --> Client : asks for an order amount
+    deactivate System
+
+    Client -> System : inputs order amount and submits the purchase order
+    activate System
+
+        System --> Client : shows operation success
+    deactivate System
+@enduml

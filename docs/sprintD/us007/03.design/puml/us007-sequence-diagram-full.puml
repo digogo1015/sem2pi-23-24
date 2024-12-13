@@ -1,0 +1,71 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Unregistered User" as UUser
+participant ":RegisterNewClientUI" as RegisterUserUI
+participant ":RegisterNewClientController" as RegisterUSerController
+participant "manageClientRepository:\nManageClientRepository" as MaClient
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "clientRepository:\nClientRepository" as ClientRep
+participant "client:\nClient" as Cli
+
+activate UUser
+
+    UUser -> RegisterUserUI : asks to register in the system
+    activate RegisterUserUI
+
+        RegisterUserUI --> UUser : requests data
+    deactivate RegisterUserUI
+
+    UUser -> RegisterUserUI : types requested data (name, passportCardNumber,\n taxNumber, address, email, telephoneNumber, password)
+    activate RegisterUserUI
+
+        RegisterUserUI --> UUser : shows requested data
+    deactivate RegisterUserUI
+
+    UUser -> RegisterUserUI : submits data
+    activate RegisterUserUI
+
+    RegisterUserUI -> RegisterUSerController : registerUser(name, passportCardNumber,\n taxNumber, address, email, telephoneNumber, password)
+        activate RegisterUSerController
+
+        RegisterUSerController -> MaClient : registerUser(name, passportCardNumber,\n taxNumber, address, email, telephoneNumber, password)
+        activate MaClient
+
+        MaClient -> Cli** : registerUser(name, passportCardNumber,\n taxNumber, address, email, telephoneNumber)
+
+        MaClient -> MaClient : validateClient(client)
+
+        MaClient -> Repositories : getInstance()
+                              activate Repositories
+
+                              Repositories --> MaClient : repositories
+                              deactivate Repositories
+
+                              MaClient -> repositories : getClientRepository()
+                              activate repositories
+
+                             repositories --> MaClient : ClientRepository
+                             deactivate repositories
+
+                             MaClient -> ClientRep : addClient(client)
+                             activate ClientRep
+
+                             ClientRep --> MaClient
+                             deactivate ClientRep
+
+                             MaClient --> RegisterUSerController : shows operation success
+                             deactivate MaClient
+
+                             RegisterUSerController --> RegisterUserUI : shows operation success
+
+        RegisterUserUI --> UUser : shows operation success
+    deactivate RegisterUserUI
+
+
+@enduml

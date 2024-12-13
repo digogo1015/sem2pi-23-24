@@ -1,0 +1,67 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide circle
+hide empty members
+
+
+class Property {
+area
+distanceCityCentre
+}
+
+class Agent {}
+
+class Client {}
+
+class Advertisement {
+dateOfAdvertisement
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+class PurchaseOrder{
+dateOfPurchaseOrder
+value
+status
+}
+
+class Notification{
+}
+
+class Email{
+message
+}
+
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+
+Email "1" -- "1" Notification : derives <
+Agent "1" -- "*" Email : sends >
+Notification "*" -- "1" Client : receives <
+
+Client"*" -- "*"Advertisement: consults >
+Client"1" -- "*"PurchaseOrder: requests >
+
+PurchaseOrder "*" - "1"Advertisement : associated with >
+PurchaseOrder"*" - "1" Agent: validates <
+
+AdvertisementRequest "1" --u "1" Advertisement: derives from <
+Advertisement"*" - "1"Agent: responsible for <
+Property"1" -u "1"AdvertisementRequest: describes <
+
+Person <|- Employee
+Person <|-  Client
+Role"1" --r "*"Employee: defines >
+Role <|-- Agent
+
+@enduml

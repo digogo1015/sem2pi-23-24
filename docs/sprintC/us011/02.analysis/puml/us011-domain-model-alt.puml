@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide empty members
+
+class Client{
+}
+class Agent {
+}
+class Order {
+price
+}
+class Advertisement{
+}
+class Property {
+area
+distanceCityCentre
+}
+Client"1" -- "*"Order:\n submits >
+Client"*" --- "*"Advertisement: consults >
+
+Agent"1" --- "*"Advertisement: responsible for >
+Agent"1" -- "*"Order: approves\n\\\\rejects >
+Agent"1" - "*"Client: <color:white>aaaa\t<color:black>Notifies \t\t >
+
+Order"1" -- "*"Advertisement: present in >
+Advertisement"1" -right "*"Property: based on >
+
+@enduml

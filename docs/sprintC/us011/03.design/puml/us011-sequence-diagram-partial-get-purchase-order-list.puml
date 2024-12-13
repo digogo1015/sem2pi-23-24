@@ -1,0 +1,44 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 5
+
+participant ":ManagePurchaseOrdersController" as CTRL
+participant "manageAdvertisementRepository\n:ManageAdvertisementRepository" as manageAdvertisement
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "advertisementRepository:\nAdvertisementRepository" as AdvertisementRepository
+
+
+-> CTRL : getListOfAdvertisementByAgent(Employee agent)
+autonumber 5.1
+activate CTRL
+CTRL -> manageAdvertisement : getListOfAdvertisementByAgent(Employee agent)
+                activate manageAdvertisement
+
+                    manageAdvertisement -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> manageAdvertisement: repositories
+                    deactivate RepositorySingleton
+
+                    manageAdvertisement -> PLAT : getPurchaseOrderRepository
+                    activate PLAT
+
+                    PLAT --> manageAdvertisement: AdvertisementRepository
+                    deactivate PLAT
+
+                    manageAdvertisement -> AdvertisementRepository : getPurchaseOrders()
+                    activate AdvertisementRepository
+
+                    AdvertisementRepository --> manageAdvertisement : PurchaseOrderList
+                    deactivate AdvertisementRepository
+
+                    manageAdvertisement -> manageAdvertisement : sortByAgent(Employee agent)
+                    manageAdvertisement --> CTRL : PurchaseOrderList
+                    deactivate manageAdvertisement
+autonumber 6
+<- CTRL : PurchaseOrderList
+@enduml

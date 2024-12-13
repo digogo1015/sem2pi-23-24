@@ -1,0 +1,110 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+class VisitRequestUI {}
+
+class VisitRequestController
+{
+    + VisitRequestController(visitRequestRepository)
+    + addVisitRequest(advertisement, dateOfVisit, timeSlotStart,\n timeSlotEnd, message, name  phoneNumber)
+    +getListOfAdvertisement(typeOfBusiness, typeOfProperty, \nsortingCriteria, numberOfBedrooms)
+    + getClientFromSession()
+}
+
+class ManageVisitRequestRepository
+{
+    + addVisitRequest(advertisement, dateOfVisit, timeSlotStart,\n timeSlotEnd, message, name  phoneNumber)
+    +getClientFromSession()
+}
+
+class ManageAdvertisementRepository
+{
+    +getListOfAdvertisement(typeOfBusiness, typeOfProperty, \nsortingCriteria, numberOfBedrooms)
+}
+
+class Repositories
+{
+    - Repositories()
+    + getInstance() : Repositories
+    + getVisitRequestRepository()
+    +getAuthenticationRepository()
+    +getAdvertisementRepository()
+}
+
+class AdvertisementRepository
+{
+    +copy()
+}
+
+class VisitRequestRepository
+{
+    +addVisitRequest(request)
+    +copy()
+}
+
+'class ApplicationSession
+'{
+'    + static getInstance()
+'    + getCurrentSession()
+'}
+
+class VisitRequest
+{
+    - Advertisement advertisement
+    - LocalDate dateOfVisit
+    - LocalTime timeSlotStart
+    - LocalTime timeSlotEnd
+    - String phoneNumber
+    - String message
+    - String name
+}
+
+class AuthenticationRepository
+{
+-AuthFacade authenticationFacade
++getCurrentUserSession()
+}
+
+class AuthFacade
+{
+-UserSession userSession
+
++getCurrentUserSession()
+}
+
+class UserSession
+{
+    + getUserName()
+    +getUserPhoneNumber
+}
+
+
+
+VisitRequestUI .> VisitRequestController
+
+VisitRequestController ...> ManageVisitRequestRepository
+VisitRequestController ...> ManageAdvertisementRepository
+
+
+ManageVisitRequestRepository ..d> Repositories
+ManageAdvertisementRepository ..d> Repositories
+ManageVisitRequestRepository ....> AuthenticationRepository
+ManageVisitRequestRepository--> VisitRequest
+
+
+Repositories -l> "1" AdvertisementRepository
+Repositories -> "1" VisitRequestRepository
+Repositories--> AuthenticationRepository
+
+
+VisitRequestRepository -> VisitRequest
+
+
+AuthenticationRepository -> AuthFacade
+AuthFacade-->UserSession
+@enduml

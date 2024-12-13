@@ -1,0 +1,57 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 004
+
+autonumber
+
+actor "Owner" as Owner
+participant ":System" as System
+
+activate Owner
+
+    Owner -> System : asks to create property ad
+    activate System
+
+        System --> Owner : shows list of agents and request's selected data (Type of Property,\n type of business)  and asks to select the data
+    deactivate System
+
+    Owner -> System : selects data
+    activate System
+
+        System --> Owner : requests data
+    deactivate System
+
+    Owner -> System : types requested data (price, area, distCityCenter, address,\n photographs(linkURI))
+    activate System
+
+    alt typeOfProperty = House or Apartment
+
+    System --> Owner : requests data
+        deactivate System
+
+        Owner -> System : types requested data (nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation)
+        activate System
+
+        alt typeOfProperty = House
+
+        System --> Owner : requests data
+                deactivate System
+
+          Owner -> System : types requested data (SunExposure, Basement, Loft)
+                  activate System
+
+          end
+          end
+
+        System --> Owner : shows selected and requested data
+    deactivate System
+
+    Owner -> System : submits data
+    activate System
+
+        System --> Owner : show operation success
+    deactivate System
+@enduml

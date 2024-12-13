@@ -1,0 +1,182 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title UI Sequence Diagram (SSD) - Us012
+
+autonumber
+
+actor "SystemAdministrator" as SysAdmin
+participant ":ImportFileUI" as UI
+participant ":ImportFileController" as Controller
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "advertisementRepository:\nAdvertisementRepository" as AdvRep
+participant "storeRepository:\nStoreRepository" as StrRep
+participant "requestRepository:\nRequestRepository" as ReqRep
+participant "commissionRepository:\nCommissionRepository" as ComRep
+participant "clientRepository:\nClientRepository" as CliRep
+participant "advertisement:\nAdvertisement" as Adv
+participant "store:\nStore" as Str
+participant "request:\nRequest" as Req
+participant "commission:\nCommission" as Com
+participant "purchaseOrder:\nPurchaseOrder" as PurOrd
+
+
+activate SysAdmin
+
+    SysAdmin -> UI : asks to import a new file
+    activate UI
+
+    UI -> Controller ** : create
+
+        UI --> SysAdmin : shows file's list
+    deactivate UI 
+
+    SysAdmin -> UI : selects file
+    activate UI
+
+    UI -> Controller : getDataFromFile(fileName)
+    activate Controller
+
+    Controller -> Repositories:getInstance()
+                                activate Repositories
+
+                Repositories --> Controller: repositories
+                deactivate Repositories
+
+                Controller -> repositories : getAdvertisementRepository()
+                            activate repositories
+
+                            repositories --> Controller : AdvertisementRepository
+                            deactivate repositories
+
+                            Controller -> repositories : getStoreRepository()
+                                        activate repositories
+
+                                        repositories --> Controller : StoreRepository
+                                        deactivate repositories
+
+                                        Controller -> repositories : getRequestRepository()
+                                                    activate repositories
+
+                                                    repositories --> Controller : RequestRepository
+                                                    deactivate repositories
+                                                    Controller -> repositories : getCommissionRepository()
+                                                                activate repositories
+
+                                                                repositories --> Controller : CommissionRepository
+                                                                deactivate repositories
+                                                                Controller -> repositories : getClientRepository()
+                                                                            activate repositories
+
+                                                                            repositories --> Controller : ClientRepository
+                                                                            deactivate repositories
+                                                                            Controller -> repositories : getPurchaseOrderRepository()
+                                                                                        activate repositories
+
+                                                                                        repositories --> Controller : PurchaseOrderRepository
+                                                                        deactivate repositories
+
+                                                                        loop
+
+        Controller ->ReqRep : createRequest(property, owner, agent, DateOfRequest)
+        activate ReqRep
+
+        ReqRep -> Req ** : createRequest(property, owner, agent, DateOfRequest)
+
+
+        ReqRep --> Controller : request
+        deactivate ReqRep
+
+        Controller ->ComRep : createCommission(commissionType, "commissionValue)
+         activate ComRep
+
+                 ComRep ->Com ** : createCommission(commissionType, "commissionValue)
+
+
+     ComRep --> Controller : commission
+       deactivate ComRep
+
+    Controller ->StrRep : createStore(address, storeDesignation, storeEmail, storePhoneNum)
+                        activate StrRep
+
+                            StrRep ->Str ** : createStore(address, storeDesignation, storeEmail, storePhoneNum)
+
+
+   StrRep --> Controller : store
+      deactivate StrRep
+
+           Controller ->AdvRep : createAdvertisement(dateOfAdvertisement, request, commission, store)
+           activate AdvRep
+
+                      AdvRep ->Adv ** : createAdvertisement(dateOfAdvertisement, request, commission, store)
+
+
+           AdvRep --> Controller : advertisement
+           deactivate AdvRep
+
+           Controller ->CliRep : getClient(legacyClient)
+           activate CliRep
+
+           CliRep --> Controller : buyer
+           deactivate CliRep
+
+
+           Controller ->AdvRep : createPurchaseOrder(buyer, dateOfSale, priceBuyer)
+           activate AdvRep
+
+                      AdvRep ->PurOrd **: createPurchaseOrder(buyer, dateOfSale, priceBuyer)
+
+
+           AdvRep --> Controller : purchaseOrder
+           deactivate AdvRep
+
+           Controller -> AdvRep : addPurchaseOrder(purchaseOrder)
+           activate AdvRep
+
+           AdvRep -> PurOrd : addPurchaseOrder(purchaseOrder)
+           activate PurOrd
+
+           PurOrd --> AdvRep
+           deactivate PurOrd
+
+           AdvRep --> Controller
+           deactivate AdvRep
+
+           Controller -> StrRep : addStore(store)
+                      activate StrRep
+
+                      StrRep -> Str : addStore(store)
+                      activate Str
+
+                      Str --> StrRep
+                      deactivate Str
+
+                      StrRep --> Controller
+                      deactivate StrRep
+
+
+      Controller -> AdvRep : addAdvertisement(advertisement)
+                            activate AdvRep
+
+                            AdvRep -> Adv : addAdvertisement(advertisement)
+                            activate Adv
+
+                            Adv --> AdvRep
+                            deactivate Adv
+
+                            AdvRep --> Controller
+                            deactivate AdvRep
+
+                            end
+
+                            Controller --> UI : operation success
+                            deactivate Controller
+
+        UI --> SysAdmin : shows operation success
+    deactivate UI 
+
+
+@enduml

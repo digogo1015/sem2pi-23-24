@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 9
+
+participant ":CreateAdvertisementForPropertyController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+
+
+-> CTRL : getTypeOfBusiness()
+autonumber 9.1
+activate CTRL
+
+CTRL -> RepositorySingleton : getInstance()
+    activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+    deactivate RepositorySingleton
+
+    CTRL -> PLAT : getTypeOfBusiness()
+    activate PLAT
+
+    PLAT --> CTRL: TypeOfBusinessRepository
+    deactivate PLAT
+
+    CTRL -> typeOfBusinessRepository : getTypeOfBusiness()
+    activate typeOfBusinessRepository
+
+    typeOfBusinessRepository --> CTRL : TypeOfBusinessList
+    deactivate typeOfBusinessRepository
+autonumber 10
+<- CTRL : TypeOfBusinessList
+deactivate CTRL
+
+@enduml

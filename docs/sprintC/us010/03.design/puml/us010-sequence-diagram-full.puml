@@ -1,0 +1,94 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title UI Sequence Diagram (SSD) - US 010
+
+autonumber
+
+actor "Client" as User
+participant ":AdvertisementPurchaseOrderUI" as UI
+participant ":AdvertisementPurchaseOrderController" as Controller
+participant "manageAdvertisementRepository:\nManageAdvertisementRepository" as MaAdv
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "advertisementRepository:\nAdvertisementRepository" as AdvRep
+participant "advertisement:\nAdvertisement" as Adv
+participant "purchaseOrder:\nPurchaseOrder" as Purch
+
+
+
+
+activate User
+
+   User -> UI : asks to show advertisement list
+    activate UI
+
+    UI->Controller**
+
+    UI -> Controller : getListOfAdvertisement()
+    activate Controller
+
+    Controller -> MaAdv : getListOfAdvertisements()
+    activate MaAdv
+    
+    MaAdv ->Repositories:getInstance()
+                                    activate Repositories
+    
+                                    Repositories-->MaAdv:repositories
+                                    deactivate Repositories
+    
+                                    MaAdv -> repositories :getAdvertisementRepository()
+                                    activate repositories
+    
+                                    repositories --> MaAdv :AdvertisementRepository
+                                    deactivate repositories
+
+                                    MaAdv -> AdvRep : copy()
+                                    activate AdvRep
+
+                                    AdvRep--> MaAdv : AdvertisementList
+                                    deactivate AdvRep
+
+                                    MaAdv --> Controller : AdvertisementList
+                                    deactivate MaAdv
+
+                                    Controller --> UI : AdvertisementList
+                                    deactivate Controller
+
+        UI -->User : displays list of advertisements and selects one
+    deactivate UI
+
+   User -> UI : requests data(price)
+    activate UI
+
+        UI -->User : types requested data
+    deactivate UI
+
+   User -> UI : submits data
+    activate UI
+
+    UI -> Controller: addPurchaseOrder(client, date, price, advertisement)
+    activate Controller
+
+    Controller -> Purch**: createPurchaseOrder(client, date, price, advertisement)
+
+    Controller->MaAdv: addPurchaseOrder(purchaseOrder, advertisement)
+    activate MaAdv
+    
+    MaAdv -> Adv : addPurchaseOrder(purchaseOrder, advertisement)
+    activate Adv
+    
+    Adv --> MaAdv: operation success
+    deactivate Adv 
+
+    MaAdv --> Controller : operation success
+    deactivate MaAdv
+
+    Controller --> UI : operation success
+    deactivate Controller
+
+        UI -->User : shows operation success
+    deactivate UI
+@enduml

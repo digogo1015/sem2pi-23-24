@@ -1,0 +1,151 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+class ImportFilesUI {}
+
+class ImportFilesController{
++listAllDeals(sortMethod, ascendingOrDescending)
+}
+
+class Repositories{
++getInstance
++getAdvertisementRepository
++getClientRepository
++getStoreRepository
++getCommissionRepository
++getRequestRepository
+}
+
+class AdvertisementRepository{
+-List<Advertisement> AdvertisementList
+
++createAdvertisement(dateOfAdvertisement, request, commission, store)
++createPurchaseOrder(buyer, dateOfSale, priceBuyer)
++addPurchaseOrder(purchaseOrder)
++addAdvertisement(advertisement)
+
+}
+
+class StoreRepository{
+-List<Store> StoreList
+
++createStore(address, storeDesignation, storeEmail, storePhoneNum)
++addStore(store)
+}
+class RequestRepository{
+-List<Request> RequestList
+
++createRequest(property, owner, agent, DateOfRequest)
+}
+class CommissionRepository{
+-List<Commission> CommissionList
+
++createCommission(commissionType, commissionValue)
+}
+class ClientRepository{
+-List<Client> ClientList
+
++getClient(client)
+}
+
+
+
+class Advertisement{
+-String dateOfAdvertisement
+-ArrayList<PurchaseOrder> purchaseOrderList
+-ArrayList<VisitRequest> visitRequestList
+-String status
+
++createAdvertisement(dateOfAdvertisement, request, commission, store)
+
+}
+
+class Store{
+-String dateOfAdvertisement
+-ArrayList<PurchaseOrder> purchaseOrderList
+-ArrayList<VisitRequest> visitRequestList
+-String status
+
++createStore(address, storeDesignation, storeEmail, storePhoneNum)
+
+}
+
+class Client{
+-PersonInfo person
+}
+
+
+class Request{
+-Property property
+-Employee agent
+-String dateOfRequest
+-String typeOfBusiness
+-String price
+-String status
+
++createRequest(property, owner, agent, DateOfRequest)
+}
+
+class Commission{
+-String typeOfCommission
+-String value
+
++createCommission(commissionType, commissionValue)
+}
+
+class PurchaseOrder{
+-String DateOfPurchaseOrder
+-String price
+-String status
+
++createPurchaseOrder(buyer, dateOfSale, priceBuyer)
+}
+
+
+
+
+ImportFilesUI ..> ImportFilesController
+ImportFilesController ..> AdvertisementRepository
+ImportFilesController ..> ClientRepository
+ImportFilesController ..> CommissionRepository
+ImportFilesController ..> StoreRepository
+ImportFilesController ..> RequestRepository
+ImportFilesController ..> PurchaseOrder
+ImportFilesController ..> Repositories
+
+AdvertisementRepository "1"-->"*" Advertisement
+RequestRepository "1"-->"*" Request
+StoreRepository "1"-->"*" Store
+CommissionRepository "1"-->"*" Commission
+ClientRepository "1"-->"*" Client
+Advertisement "1"-->"*" PurchaseOrder
+
+
+ImportFilesController ..> Advertisement
+ImportFilesController ..> Store
+ImportFilesController ..> Request
+ImportFilesController ..> PurchaseOrder
+ImportFilesController ..> Client
+ImportFilesController ..> Commission
+
+Repositories --> "1"AdvertisementRepository
+Repositories --> "1"StoreRepository
+Repositories --> "1"RequestRepository
+Repositories --> "1"CommissionRepository
+Repositories --> "1"ClientRepository
+
+Advertisement --> Request
+Advertisement --> Commission
+
+PurchaseOrder --> Client
+
+Request --> Client
+
+
+
+@enduml

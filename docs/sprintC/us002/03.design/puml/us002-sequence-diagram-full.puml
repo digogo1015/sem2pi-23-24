@@ -1,0 +1,229 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as ADM
+participant ":MakeAdvertisementForPropertyUI" as UI
+participant ":MakeAdvertisementForPropertyController" as CTRL
+participant "manageEmployeeRepository\n:ManageEmployeeRepository" as manageEmployees
+participant "manageAdvertisementRepository\n:ManageAdvertisementRepository" as manageAdvertisements
+participant "Advertisement:\nAdvertisement" as Advertisement
+participant "manageRequestRepository\n:ManageRequestRepository" as manageRequests
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "AdvertisementRepository:\nAdvertisementRepository" as AdvertisementRepository
+
+
+activate ADM
+
+        ADM -> UI : asks to create property advertisement
+
+        activate UI
+
+            UI -> CTRL** : create
+
+            UI -> CTRL : getAgents()
+            activate CTRL
+
+                CTRL -> manageEmployees : getAgents()
+                activate manageEmployees
+
+                manageEmployees -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                        RepositorySingleton --> manageEmployees: repositories
+                    deactivate RepositorySingleton
+
+                    manageEmployees -> PLAT : getEmployeeRepository()
+                    activate PLAT
+
+                        PLAT --> manageEmployees: EmployeeRepository
+                    deactivate PLAT
+
+                    manageEmployees -> manageEmployees : filterByRole(Agent)
+                    activate manageEmployees
+
+                    manageEmployees --> manageEmployees : listOfAgents
+                    deactivate manageEmployees
+
+                    manageEmployees --> CTRL : listOfAgents
+                deactivate manageEmployees
+
+                CTRL --> UI : listOfAgents
+            deactivate CTRL
+
+            UI -> CTRL : getTypeOfProperties()
+                        activate CTRL
+
+                            CTRL -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> CTRL: repositories
+                                deactivate RepositorySingleton
+
+                                CTRL -> PLAT : getTypeOfPropertiesRepository()
+                                activate PLAT
+
+                                PLAT --> CTRL: TypeOfPropertiesRepository
+                                deactivate PLAT
+
+                                CTRL -> typeOfPropertyRepository : getTypeOfProperties()
+                                activate typeOfPropertyRepository
+
+                                typeOfPropertyRepository --> CTRL : TypeOfPropertiesList
+                                deactivate typeOfPropertyRepository
+
+                            CTRL --> UI : TypeOfPropertiesList
+                        deactivate CTRL
+
+                        UI -> CTRL : getTypeOfCommission()
+                                                activate CTRL
+
+                                                    CTRL -> RepositorySingleton : getInstance()
+                                                        activate RepositorySingleton
+
+                                                            RepositorySingleton --> CTRL: repositories
+                                                        deactivate RepositorySingleton
+
+                                                        CTRL -> PLAT : getTypeOfCommission()
+                                                        activate PLAT
+
+                                                        PLAT --> CTRL: TypeOfCommissionRepository
+                                                        deactivate PLAT
+
+                                                        CTRL -> typeOfCommissionRepository : getTypeOfCommission()
+                                                        activate typeOfCommissionRepository
+
+                                                        typeOfCommissionRepository --> CTRL : TypeOfCommissionList
+                                                        deactivate typeOfCommissionRepository
+
+                                                    CTRL --> UI : TypeOfCommissionList
+                                                deactivate CTRL
+
+                        UI -> CTRL : getTypeOfBusiness()
+                                                activate CTRL
+                                                
+                                                    CTRL -> RepositorySingleton : getInstance()
+                                                        activate RepositorySingleton
+
+                                                            RepositorySingleton --> CTRL: repositories
+                                                        deactivate RepositorySingleton
+
+                                                        CTRL -> PLAT : getTypeOfBusiness()
+                                                        activate PLAT
+
+                                                        PLAT --> CTRL: TypeOfBusinessRepository
+                                                        deactivate PLAT
+
+                                                        CTRL -> typeOfBusinessRepository : getTypeOfBusiness()
+                                                        activate typeOfBusinessRepository
+
+                                                        typeOfBusinessRepository --> CTRL : TypeOfBusinessList
+                                                        deactivate typeOfBusinessRepository
+
+                                                    CTRL --> UI : TypeOfBusinessList
+                                                deactivate CTRL
+
+            UI --> ADM : shows list of agents and Advertisement's selected data (Type of Property,\n type of business, type of commission)  and asks to select the data
+        deactivate UI
+
+    ADM -> UI : selects data
+    activate UI
+
+        UI --> ADM : request data
+    deactivate UI
+
+    ADM -> UI : types requested data (price, area, distance to city center, address,\n photographs(linkURI), commission value)
+    activate UI
+
+    alt typeOfBusiness = Rent
+
+    alt typeOfProperty = House || Apartment
+
+        UI --> ADM : request data
+    deactivate UI
+
+    ADM -> UI : types requested data (nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation)
+        activate UI
+
+            alt typeOfProperty = House
+
+            UI --> ADM : request data
+        deactivate UI
+
+        ADM -> UI : types requested data (SunExposure, Basement, Loft)
+            activate UI
+
+            end
+            end
+
+UI --> ADM : shows selected and typed data
+            deactivate UI
+    ADM -> UI : submits data
+    activate UI
+
+        UI -> CTRL : submitAdvertisement(price, area, distCityCenter, address,\n photographs(linkURI), commission value,\ nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation, SunExposure, Basement, Loft,\n TypeofBusiness, TypeofProperty, TypeofCommission, agent)
+        activate CTRL
+
+                    CTRL -> manageAdvertisements : submitAdvertisement(price, area, distCityCenter, address,\n photographs(linkURI), commission value,\ nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation, SunExposure, Basement, Loft,\n TypeofBusiness, TypeofProperty, TypeofCommission, agent)
+                    activate manageAdvertisements
+
+                    manageAdvertisements -> manageRequests : createRequest(price, area, distCityCenter, address,\n photographs(linkURI),\ nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation, SunExposure, Basement, Loft,\n TypeofBusiness, TypeofProperty, Agent)
+                    activate manageRequests
+
+                                        manageRequests ->manageRequests : getDate()
+                                                            activate manageRequests
+
+                                                            manageRequests --> manageRequests : dateOfRequest
+                                                            deactivate manageRequests
+
+                                                            manageRequests -> Property** : createProperty(price, area, distCityCenter, address,\n photographs(linkURI),\ nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation, SunExposure, Basement, Loft,\n TypeofBusiness, TypeofProperty)
+
+
+                                                            manageRequests -> Request** : createRequest(property, agent, dateOfRequest)
+
+manageRequests --> manageAdvertisements : request
+deactivate manageRequests
+
+                    manageAdvertisements ->manageAdvertisements : getDate()
+                    activate manageAdvertisements
+
+                    manageAdvertisements --> manageAdvertisements : dateOfAdvertisement
+                    deactivate manageAdvertisements
+
+                                       manageAdvertisements -> Advertisement** : createAdvertisement(request, typeOfCommission, commissionValue, dateOfAdvertisement)
+
+                                        manageAdvertisements -> manageAdvertisements : validateAdvertisement(Advertisement)
+
+                         manageAdvertisements -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> manageAdvertisements: repositories
+                                deactivate RepositorySingleton
+
+                                manageAdvertisements -> PLAT : getAdvertisementRepository()
+                                activate PLAT
+
+                                    PLAT --> manageAdvertisements: AdvertisementRepository
+                                deactivate PLAT
+
+                                manageAdvertisements -> AdvertisementRepository : addAdvertisement(Advertisement)
+                                activate AdvertisementRepository
+
+                                AdvertisementRepository --> manageAdvertisements :
+                                deactivate AdvertisementRepository
+
+                                manageAdvertisements --> CTRL : Advertisement
+                            deactivate manageAdvertisements
+
+          CTRL -> UI: Advertisement
+          deactivate CTRL
+    UI -> ADM: show operation success
+    deactivate UI
+
+deactivate ADM
+@enduml

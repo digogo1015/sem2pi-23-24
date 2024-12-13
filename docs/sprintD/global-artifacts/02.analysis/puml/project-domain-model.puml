@@ -1,0 +1,212 @@
+@startuml
+
+hide circle
+hide empty members
+
+
+title Domain Model
+
+class Store {
+designation
+emailAddress
+telephoneNumber
+}
+class Employee {}
+
+class SystemAdministrator {}
+
+class Agent {}
+
+class Client{}
+
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+
+class Role {
+designation
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+class TypeOfBusiness{
+designation
+}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+class Residence {
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+}
+
+class House{
+existenceOfBasement
+existenceOfInhabitableLoft
+sunExposure
+}
+
+class Address{
+street
+state
+district
+city
+zipcode
+}
+
+class Photograph{
+linkURI
+}
+
+class SocialSecurityCard {
+taxNumber
+}
+
+class Passport {
+number
+}
+
+class Equipment {
+designation
+}
+
+class TypeOfCommission{
+designation
+}
+
+class TypeOfProperty{
+designation
+}
+
+class Commission{
+value
+}
+
+class PropertyVisit{
+dateOfVisit
+}
+
+class VisitRequest{
+timeToStartVisit
+timeToEndVisit
+dateOfVisit
+dateOfRequest
+status
+}
+
+class PurchaseOrder{
+dateOfPurchaseOrder
+value
+status
+}
+
+class Notification{
+}
+
+class Email{
+message
+}
+
+class SMS{
+message
+}
+
+Property"*" ----- "1"Agent: responsible for <
+Property"*" -- "1"Client: visits <
+Property"1" -- "1"Address: located at >
+Property"1..*" -- "1"Client: owns <
+Property"1" -- "1..30"Photograph: illustrates <
+Property"*" -- "1"TypeOfProperty: characterized by >
+Property"1" -- "1"AdvertisementRequest: describes <
+Property  <|-- Residence
+
+VisitRequest"*" -- "1"Client: requests <
+VisitRequest"*" -- "1"Agent: consults <
+
+PropertyVisit"*" -- "1"Agent: organizes <
+PropertyVisit"*" -- "1"Client: participates in <
+
+Residence <|-- House
+Residence"1" -- "*"Equipment : contains >
+
+Address"1" -- "1"Store: located at <
+
+Person"1" -- "1"Passport: possesses >
+Person"*" -- "1"Address: lives at >
+Person"1" -- "1"SocialSecurityCard: possesses >
+Person <|--l Employee
+Person <|---  Client
+
+
+Role"1" -- "*"Employee: defines >
+Role <|-- SystemAdministrator
+Role <|-- Agent
+Role <|-- Client
+Role <|-- NetworkManager
+Role <|-- StoreManager
+
+
+PropertyVisit "1"--"1" VisitRequest : derives from >
+
+Client"1" -- "*"Advertisement: consults >
+Client"1" -- "*"PurchaseOrder: requests >
+
+VisitRequest "*"-- "1"Advertisement : associated with >
+PurchaseOrder "*"-- "1"Advertisement : associated with >
+PurchaseOrder"*" -- "1" Agent: validates <
+
+
+
+AdvertisementRequest"*" --l "1" Client: requests <
+AdvertisementRequest"*" -- "1" Agent: validates <
+AdvertisementRequest"1" -- "1" Advertisement: derives from <
+
+Employee"*" - "1"Store: assigned to >
+NetworkManager"1" - "*"Store: analyses >
+
+Employee"*" -- "1"SystemAdministrator: registers <
+SystemAdministrator"1" -- "*"Store: registers >
+
+
+Agent"1" -- "*"Advertisement: publishes >
+Agent"1" --down "*"Commission: sets >
+
+Commission"*" -- "1"TypeOfCommission: characterized by >
+Commission"1" -- "1"Advertisement: present in >
+
+NetworkManager"1" -- "*"Advertisement : consults >
+StoreManager"1" -- "*" Advertisement: analyses >
+
+SystemAdministrator "1" - "*" LegacyFile : Imports >
+Advertisement "*" - "1" LegacyFile : contains <
+
+SystemAdministrator "1" -- "*" Email : sends >
+Agent "1" -- "*" Email : sends >
+Client "1" -- "*" Email : sends >
+
+Email "1" -- "1" Notification : derives <
+SMS "1" -- "1" Notification : derives <
+
+
+Agent "1" -- "*" SMS : sends >
+Notification "*" -- "1" Agent : receives <
+Notification "*" -- "1" Client : receives <
+
+AdvertisementRequest"*" --down "1" TypeOfBusiness: present in <
+
+@enduml

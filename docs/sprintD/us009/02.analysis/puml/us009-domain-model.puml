@@ -1,0 +1,65 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client{}
+
+class PropertyVisit{
+dateOfVisit
+}
+
+class Agent {}
+
+class VisitRequest{
+timeToStartVisit
+timeToEndVisit
+dateOfVisit
+dateOfRequest
+status
+}
+
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+Client"1" --r "*"Advertisement: consults >
+
+VisitRequest "*"-- "1"Advertisement : associated with >
+VisitRequest"*" -- "1"Client: requests <
+VisitRequest"*" --r "1"Agent: validates <
+
+PropertyVisit"*" -- "1"Agent: organizes <
+PropertyVisit"*" -- "1"Client: participates in <
+PropertyVisit "1" -- "1" VisitRequest : derives from >
+
+Property"1" -- "1"AdvertisementRequest: describes <
+AdvertisementRequest"1" --l "1" Advertisement: derives from <
+
+Person <|--r  Client
+
+@enduml

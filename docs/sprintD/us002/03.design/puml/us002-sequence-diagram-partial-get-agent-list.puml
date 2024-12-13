@@ -1,0 +1,46 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 3
+
+participant ":CreateAdvertisementForPropertyController" as CTRL
+participant "manageEmployeeRepository\n:ManageEmployeeRepository" as manageEmployees
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+
+
+            -> CTRL : getAgents()
+            autonumber 3.1
+            activate CTRL
+
+                CTRL -> manageEmployees : getAgents()
+                activate manageEmployees
+
+
+                manageEmployees -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                        RepositorySingleton --> manageEmployees: repositories
+                    deactivate RepositorySingleton
+
+                    manageEmployees -> PLAT : getEmployeeRepository()
+                    activate PLAT
+
+                        PLAT --> manageEmployees: EmployeeRepository
+                    deactivate PLAT
+
+                    manageEmployees -> manageEmployees : filterByRole(Agent)
+                    activate manageEmployees
+
+                    manageEmployees --> manageEmployees : listOfAgents
+                    deactivate manageEmployees
+
+                    manageEmployees --> CTRL : listOfAgents
+                deactivate manageEmployees
+                autonumber 4
+                <- CTRL : listOfAgents
+            deactivate CTRL
+
+@enduml

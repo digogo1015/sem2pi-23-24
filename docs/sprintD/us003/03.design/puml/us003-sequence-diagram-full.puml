@@ -1,0 +1,371 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "System Administrator" as User
+participant ":RegisterEmployeeUI" as UI
+participant ":RegisterEmployeeController" as Controller
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "storeRepository:\nStoreRepository" as StrRep
+participant "roleRepository:\nRoleRepository" as RoleRep
+participant "employeeRepository:\nEmployeeRepository" as EmpRep
+participant "personInfo:\nPersonInfo" as PerInf
+participant "employeeInfo:\nEmployeeInfo" as EmpInf
+participant "employee:\nEmployee" as Emp
+
+
+
+
+activate User
+
+    User -> UI: asks to register a new employee
+        activate UI
+
+        UI -> Controller ** : create
+
+        UI -> Controller : getStores()
+            activate Controller
+
+            Controller -> Repositories:getInstance()
+                activate Repositories
+
+                            Repositories-->Controller:repositories
+                            deactivate Repositories
+
+                            Controller -> repositories :getStoreRepository()
+                            activate repositories
+
+                            repositories --> Controller :StoreRepository
+                            deactivate repositories
+
+                            Controller -> StrRep : copy()
+                            activate StrRep
+
+                            StrRep --> Controller : storeList
+                            deactivate StrRep
+
+                            Controller --> UI : storeList
+                            deactivate Controller
+
+    UI--> User : displays store list and asks to select one
+        deactivate UI
+
+    User -> UI: selects store
+        activate UI
+
+        UI -> Controller : getRoles()
+                    activate Controller
+
+                                    Controller -> repositories :getRoleRepository()
+                                    activate repositories
+
+                                    repositories --> Controller :RoleRepository
+                                    deactivate repositories
+
+                                    Controller -> RoleRep : copy()
+                                    activate RoleRep
+
+                                    RoleRep --> Controller : roleList
+                                    deactivate RoleRep
+
+                                    Controller --> UI : roleList
+                                    deactivate Controller
+
+    UI-> User : displays role lists and asks to select
+        deactivate UI
+
+        User -> UI: selects role(s)
+                activate UI
+
+            UI--> User : requests data ((name, passport card number,\n tax number, address, email,\n telephone number)
+                deactivate UI
+
+    User -> UI: types requested data
+        activate UI
+
+        UI ->  Controller : getEmployee(name, telephoneNumber, taxNumber, passportNumber,\n address, email, storeDesignation, roleDesignation)
+        activate Controller
+
+        Controller -> RoleRep : getRoleByDesignation(roleDesignation)
+        activate RoleRep
+
+        RoleRep --> Controller : role
+        deactivate RoleRep
+
+        Controller -> StrRep : getStoreByDesignation(storeDesignation)
+        activate StrRep
+
+        StrRep --> Controller : store
+        deactivate StrRep
+
+
+                                    Controller -> repositories :getEmployeeRepository()
+                                    activate repositories
+
+                                    repositories --> Controller :EmployeeRepository
+                                    deactivate repositories
+
+        Controller -> EmpRep : createEmployee(name, telephoneNumber, taxNumber,\n passportNumber, address, email, store, role)
+        activate EmpRep
+
+        EmpRep -> PerInf  : createPerson(name, telephoneNumber, email,\n address, taxNumber, passportNumber)
+        activate PerInf
+
+        PerInf -> PerInf : createPerson(name, telephoneNumber, email,\n address, taxNumber, passportNumber)
+        activate PerInf
+
+        PerInf -> PerInf : validateInfo(name, telephoneNumber, email)
+        activate PerInf
+
+        PerInf --> PerInf
+        deactivate PerInf
+
+        PerInf --> PerInf : personInfo
+        deactivate PerInf
+
+        PerInf --> EmpRep : personInfo
+        deactivate PerInf
+
+        EmpRep -> EmpInf  : createEmployee(personInfo, store, role)
+                activate EmpInf
+
+                EmpInf -> EmpInf : createPerson(personInfo, store, role)
+                activate EmpInf
+
+                EmpInf -> EmpInf : validateInfo(personInfo, store, role)
+                activate EmpInf
+
+                EmpInf --> EmpInf
+                deactivate EmpInf
+
+                EmpInf --> EmpInf : employeeInfo
+                deactivate EmpInf
+
+                EmpInf --> EmpRep : employeeInfo
+                deactivate EmpInf
+
+                EmpRep -> Emp ** : createEmployee(employeeInfo)
+
+                EmpRep --> Controller : employee
+                deactivate EmpRep
+
+                Controller --> UI : employee
+                deactivate Controller
+
+    UI--> User : shows selected and requested data
+        deactivate UI
+
+    User -> UI: submits data
+        activate UI
+
+        UI -> Controller : registerEmployee(employee)
+        activate Controller
+
+        Controller -> EmpRep : registerEmployee(employee)
+        activate EmpRep
+
+        EmpRep -> EmpRep : addEmployee(employee)
+        activate EmpRep
+
+        EmpRep -> EmpRep : validateEmployee(employee)
+        activate EmpRep
+
+        EmpRep --> EmpRep
+        deactivate EmpRep
+
+        EmpRep --> EmpRep
+        deactivate EmpRep
+
+        EmpRep --> Controller : operation success
+        deactivate EmpRep
+
+        Controller --> UI : operation success
+        deactivate Controller
+
+    UI--> User : shows operation success
+        deactivate UI
+
+'actor "System Administrator" as User
+ 'participant ":RegisterNewEmployeeUI" as RegisterEmployeeUI
+ 'participant ":RegisterNewEmployeeController" as RegisterEmployeeController
+ 'participant "manageStoreRepository:\nManageStoreRepository" as MaStore
+ 'participant "manageRoleRepository:\nManageRoleRepository" as MaRole
+ 'participant "manageEmployeeRepository:\nManageEmployeeRepository" as MaEmp
+ 'participant ":Repositories" as Repositories
+ 'participant "repositories\n:Repositories" as repositories
+ 'participant "storeRepository:\nStoreRepository" as StoreRepository
+ 'participant "roleRepository:\nRoleRepository" as RoleRep
+ 'participant "employee:\nEmployee" as Emp
+ 'participant "employeeRepository:\nEmployeeRepository" as EmpRep
+ '
+ '
+ 'activate User
+ '
+ '       User -> RegisterEmployeeUI : asks to register a new employee
+ '       activate RegisterEmployeeUI
+ '
+ '       RegisterEmployeeUI -> RegisterEmployeeController** : create
+ '
+ '       RegisterEmployeeUI -> RegisterEmployeeController : getStores()
+ '       activate RegisterEmployeeController
+ '
+ '       RegisterEmployeeController -> MaStore : getStores()
+ '       activate MaStore
+ '
+ '       MaStore -> Repositories : getInstance()
+ '       activate Repositories
+ '
+ '       Repositories --> MaStore : repositories
+ '       deactivate Repositories
+ '
+ '       MaStore -> repositories : getStoreRepository()
+ '       activate repositories
+ '
+ '       repositories --> MaStore : storeRepository
+ '       deactivate repositories
+ '
+ '       MaStore -> StoreRepository :getStores()
+ '       activate StoreRepository
+ '
+ '       StoreRepository --> MaStore : storeList
+ '       deactivate StoreRepository
+ '
+ '       MaStore --> RegisterEmployeeController : storeList
+ '       deactivate MaStore
+ '
+ '       RegisterEmployeeController --> RegisterEmployeeUI : storeList
+ '       deactivate RegisterEmployeeController
+ '
+ '       RegisterEmployeeUI --> User : displays store list and asks to select one
+ '       deactivate RegisterEmployeeUI
+ '
+ '       User -> RegisterEmployeeUI : selects store
+ '       activate RegisterEmployeeUI
+ '
+ '       RegisterEmployeeUI -> RegisterEmployeeController : getRoles()
+ '       activate RegisterEmployeeController
+ '
+ '       RegisterEmployeeController -> MaRole : getRoles()
+ '       activate MaRole
+ '
+ '       MaRole -> Repositories : getInstance()
+ '       activate Repositories
+ '
+ '       Repositories --> MaRole : repositories
+ '       deactivate Repositories
+ '
+ '       MaRole -> repositories : getRoleRepository()
+ '       activate repositories
+ '
+ '       repositories --> MaRole : roleRepository
+ '       deactivate repositories
+ '
+ '       MaRole -> RoleRep : getRoles()
+ '       activate RoleRep
+ '
+ '       RoleRep --> MaRole : roleList
+ '       deactivate RoleRep
+ '
+ '       MaRole --> RegisterEmployeeController : roleList
+ '       deactivate MaRole
+ '
+ '       RegisterEmployeeController --> RegisterEmployeeUI : roleList
+ '       deactivate RegisterEmployeeController
+ '
+ '       RegisterEmployeeUI --> User : displays role lists and asks to select
+ '       deactivate RegisterEmployeeUI
+ '
+ '       User -> RegisterEmployeeUI : selects role(s)
+ '       activate RegisterEmployeeUI
+ '
+ '       RegisterEmployeeUI -> User : requests data
+ '       deactivate RegisterEmployeeUI
+ '
+ '       User -> RegisterEmployeeUI : types requested data (name, passport card number,\n tax number, address, email,\n telephone number)
+ '       activate RegisterEmployeeUI
+ '
+ '       RegisterEmployeeUI --> User : shows selected and requested data
+ '       deactivate RegisterEmployeeUI
+ '
+ '       User -> RegisterEmployeeUI : submits data
+ '       activate RegisterEmployeeUI
+ '
+ '       RegisterEmployeeUI -> RegisterEmployeeController : registerEmployee(name, passportCardNumber,\n taxNumber, address, email,\n telephoneNumber, storeOption, roleOption)
+ '       activate RegisterEmployeeController
+ '
+ '       RegisterEmployeeController -> MaStore : getStoreByOption(storeOption)
+ '       activate MaStore
+ '
+ '       MaStore -> StoreRepository : getStoreByOption(storeOption)
+ '       activate StoreRepository
+ '
+ '       StoreRepository --> MaStore : store
+ '       deactivate StoreRepository
+ '
+ '       MaStore --> RegisterEmployeeController : store
+ '       deactivate MaStore
+ '
+ '       RegisterEmployeeController -> MaRole : getRoleByOption(roleOption)
+ '       activate MaRole
+ '
+ '       MaRole -> RoleRep : getRoleByOption(roleOption)
+ '       activate RoleRep
+ '
+ '       RoleRep --> MaRole : role
+ '       deactivate RoleRep
+ '
+ '        MaRole --> RegisterEmployeeController : role
+ '        deactivate MaRole
+ '
+ '
+ '
+ '       RegisterEmployeeController -> MaEmp : registerEmployee(name, passportCardNumber,\n taxNumber, address, email,\n telephoneNumber, store, role)
+ '       activate MaEmp
+ '
+ '       MaEmp -> Emp** : registerEmployee(name, passportCardNumber,\n taxNumber, address, email,\n telephoneNumber, store, role)
+ '
+ '       MaEmp -> MaEmp : validateEmployee(employee)
+ '
+ '
+ '       MaEmp -> Repositories : getInstance()
+ '       activate Repositories
+ '
+ '       Repositories --> MaEmp : repositories
+ '       deactivate Repositories
+ '
+ '       MaEmp -> repositories : getEmployeeRepository()
+ '       activate repositories
+ '
+ '       repositories --> MaEmp : EmployeeRepository
+ '       deactivate repositories
+ '
+ '       MaEmp -> EmpRep : addEmployee(employee)
+ '       activate EmpRep
+ '
+ '       EmpRep --> MaEmp
+ '       deactivate EmpRep
+ '
+ '       MaEmp -> MaEmp : createCredentials()
+ '                      activate MaEmp
+ '
+ '       MaEmp --> MaEmp : password
+ '       deactivate MaEmp
+ '
+ '       MaEmp -> MaEmp : sendCredentials(email, password)
+ '
+ '
+ '
+ '       MaEmp --> RegisterEmployeeController : shows operation success
+ '       deactivate MaEmp
+ '
+ '
+ '       RegisterEmployeeController --> RegisterEmployeeUI : shows operation success
+ '       deactivate RegisterEmployeeController
+ '
+ '       RegisterEmployeeUI --> User : shows operation success
+ '       deactivate RegisterEmployeeUI
+@enduml

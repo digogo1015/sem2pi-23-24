@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+
+participant "manageStoreRepository:\nManageStoreRepository" as MaStore
+participant "storeRepository:\nStoreRepository" as StoreRep
+
+autonumber 15
+
+
+        -> MaStore : getStoreByOption(storeOption)
+
+        autonumber 15.1
+       activate MaStore
+       group Get Store Object
+
+
+       MaStore -> StoreRep : getStoreByOption(storeOption)
+       activate StoreRep
+
+       StoreRep --> MaStore : store
+       deactivate StoreRep
+
+       end
+       autonumber 16
+
+       <-- MaStore : store
+       deactivate MaStore
+
+
+@enduml

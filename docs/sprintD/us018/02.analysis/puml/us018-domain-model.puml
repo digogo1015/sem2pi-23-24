@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class StoreManager{}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+class Residence {
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+AdvertisementRequest "1" --u "1" Advertisement: derives from <
+Property"1" --l "1"AdvertisementRequest: describes <
+Property  <|-- Residence
+StoreManager"1" --d "*"Advertisement : analyses >
+
+
+
+@enduml

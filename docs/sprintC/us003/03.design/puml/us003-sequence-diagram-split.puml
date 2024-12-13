@@ -1,0 +1,106 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "System Administrator" as User
+participant ":RegisterNewEmployeeUI" as RegisterEmployeeUI
+participant ":RegisterNewEmployeeController" as RegisterEmployeeController
+participant "manageStoreRepository:\nManageStoreRepository" as MaStore
+participant "manageRoleRepository:\nManageRoleRepository" as MaRole
+participant "manageEmployeeRepository:\nManageEmployeeRepository" as MaEmp
+
+activate User
+
+       User -> RegisterEmployeeUI : asks to register a new employee
+       activate RegisterEmployeeUI
+
+       RegisterEmployeeUI -> RegisterEmployeeController** : create
+
+       RegisterEmployeeUI -> RegisterEmployeeController : getStores()
+       activate RegisterEmployeeController
+
+       ref over RegisterEmployeeController
+       Get Stores List
+       end ref
+
+       RegisterEmployeeController --> RegisterEmployeeUI : storeList
+       deactivate RegisterEmployeeController
+
+       RegisterEmployeeUI --> User : displays store list and asks to select one
+              deactivate RegisterEmployeeUI
+
+              User -> RegisterEmployeeUI : selects store
+              activate RegisterEmployeeUI
+
+       RegisterEmployeeUI -> RegisterEmployeeController : getRoles()
+       activate RegisterEmployeeController
+
+       ref over RegisterEmployeeController
+       Get Roles List
+       end ref
+
+       RegisterEmployeeController --> RegisterEmployeeUI : roleList
+       deactivate RegisterEmployeeController
+
+       RegisterEmployeeUI --> User : displays role lists and asks to select
+              deactivate RegisterEmployeeUI
+
+              User -> RegisterEmployeeUI : selects role(s)
+              activate RegisterEmployeeUI
+
+       RegisterEmployeeUI -> User : requests data
+       deactivate RegisterEmployeeUI
+
+       User -> RegisterEmployeeUI : types requested data (name, passport card number,\n tax number, address, email,\n telephone number)
+       activate RegisterEmployeeUI
+
+       RegisterEmployeeUI -> RegisterEmployeeUI : validateData()
+
+       RegisterEmployeeUI --> User : shows selected and requested data
+       deactivate RegisterEmployeeUI
+
+       User -> RegisterEmployeeUI : submits data
+       activate RegisterEmployeeUI
+
+       RegisterEmployeeUI -> RegisterEmployeeController : registerEmployee(name, passport card number,\n tax number, address, email address,\n contact telephone number, storeOption, roleOption)
+       activate RegisterEmployeeController
+
+       RegisterEmployeeController -> MaStore : getStoreByOption(storeOption)
+       activate MaStore
+
+       ref over MaStore
+       Get Store Object
+       end ref
+
+       MaStore --> RegisterEmployeeController : store
+       deactivate MaStore
+
+       RegisterEmployeeController -> MaRole : getRoleByOption(roleOption)
+       activate MaRole
+
+       ref over MaRole
+       Get Role Object
+       end ref
+
+       MaRole --> RegisterEmployeeController : role
+       deactivate MaRole
+
+       RegisterEmployeeController -> MaEmp : registerEmployee(name, passport card number,\n tax number, address, email address,\n contact telephone number, store, role)
+       activate MaEmp
+
+       ref over MaEmp
+       Register Employee
+       end ref
+
+       MaEmp --> RegisterEmployeeController : shows operation success
+       deactivate MaEmp
+
+       RegisterEmployeeController --> RegisterEmployeeUI : shows operation success
+       deactivate RegisterEmployeeController
+
+       RegisterEmployeeUI --> User : shows operation success
+       deactivate RegisterEmployeeUI
+@enduml

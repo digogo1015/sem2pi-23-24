@@ -1,0 +1,91 @@
+@startuml
+'skinparam linetype ortho
+'left to right direction
+hide circle
+hide methods
+
+title Domain Model
+class Organization{
+name
+}
+class StoreNetwork {}
+class Employee {
+name
+citizenCardNumber
+taxNumber
+address
+emailAddress
+telephoneNumber
+}
+class SystemAdministrator {}
+class Store {
+designation
+location
+emailAddress
+telephoneNumber
+}
+class NetworkManager {}
+class LocalManager {}
+class Agent {}
+class Role {}
+class Owner {
+name
+citizenCardNumber
+taxNumber
+address
+emailAddress
+telephoneNumber
+}
+class Client{}
+class Advertisement {
+price
+TypeOfBusiness
+}
+class Property {
+area
+location
+distanceCityCentre
+photographs
+}
+class Apartment{}
+class ApartmentHouse {
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+availableEquipment
+}
+class Land{}
+class House{
+existenceOfBasement
+existenceOfInhabitableLoft
+sunExposure
+}
+Organization"1" -- "1..*"Employee : works for <
+Organization"1" -- "1"StoreNetwork : has >
+StoreNetwork"1" -- "*"Store : has >
+Employee"1" -- "1"Role: classified in >
+Employee"1" -- "*"Store: assigned to >
+Role"1" -- "1"SystemAdministrator: classifies >
+SystemAdministrator"1" -- "*"Store: registers >
+SystemAdministrator"1" -- "*"Employee: registers >
+Role"1" -- "1"NetworkManager: classifies >
+Role"1" -- "*"LocalManager: classifies >
+Role"1" ---- "*"Agent: classifies >
+LocalManager"1" -- "1"Store: manages >
+NetworkManager"1" -- "1"StoreNetwork: manages >
+Agent"1" -- "*"Client: contacts <
+Agent"1" -- "*"Owner: gives info <
+Owner"1" -- "1"Property: owns >
+Property"*" ----- "1"Agent: responsible for <
+Advertisement"1" -- "1"Property: describes >
+Agent"1" -- "*"Advertisement: publishes >
+Property "1" -- "*" ApartmentHouse : is a <
+ApartmentHouse"1" -- "1"Apartment: is a <
+Property"1" -- "*"Land: is a <
+ApartmentHouse"1" -- "1"House: is a <
+Client"1" -- "1"Advertisement: consults >
+Client"1" -- "1"Property: visits >
+
+
+
+@enduml

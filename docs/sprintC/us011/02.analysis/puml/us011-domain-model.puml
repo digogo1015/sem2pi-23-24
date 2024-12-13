@@ -1,0 +1,108 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide circle
+hide empty members
+
+class Equipment{
+designation
+}
+class Photograph{
+linkURI
+}
+class Commission{
+value
+}
+class Property {
+area
+distanceCityCentre
+}
+class Residence {
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+}
+class House{
+existenceOfBasement
+existenceOfInhabitableLoft
+sunExposure
+}
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+class Agent {
+}
+class Client {
+}
+class TypeOfCommission{
+designation
+}
+class Address{
+state
+district
+city
+}
+class SocialSecurityCard {
+taxNumber
+}
+class Passport {
+number
+}
+class Advertisement {
+dateOfAdvertisement
+}
+class TypeOfProperty{
+designation
+}
+class AdvertisementRequest {
+price
+dateOfRequest
+}
+class TypeOfBusiness{
+designation
+}
+class Role {
+designation
+}
+class Order{
+client
+dateOfPurchaseOrder
+price
+status
+}
+Person"*" - "1"Address: lives at >
+Person"1" -left "1"SocialSecurityCard: possesses >
+Person"1" -left "1"Passport: possesses >
+
+Role"1" -left "*"Employee: defines >
+Role <|-- Agent
+Person <|-- Client
+Person <|-- Employee
+
+AdvertisementRequest"*" - "1" TypeOfBusiness: present in <
+AdvertisementRequest"1" --up "1" Advertisement: derives from <
+
+Address"1" --- "1"Property: located at <
+Property"1" ---up "1..30"Photograph: illustrates <
+Property"*" ---up "1"TypeOfProperty: characterized by >
+
+Commission"*" - "1"TypeOfCommission: characterized by >
+Commission"1" --left "1"Advertisement: present in >
+
+Property  <|--right Residence
+Residence <|--right House
+Residence --up Equipment : contains >
+Advertisement"*" -left "1"Agent: responsible for <
+Advertisement -up Property: based on >
+
+Agent"1" -- "*"Order: approves\n\\\\rejects >
+Agent"1" - "*"Client: notifies >
+Order"1" -right "*"Advertisement: present in >
+
+Order"*" -- "1"Client: submits <
+Client"1" - "*"Advertisement: \t\tconsults<color:white>       aaaa >
+@enduml

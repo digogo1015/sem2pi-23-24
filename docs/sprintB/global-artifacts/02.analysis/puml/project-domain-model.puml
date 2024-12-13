@@ -1,0 +1,148 @@
+@startuml
+
+hide circle
+hide empty members
+
+title Domain Model
+
+class Store {
+designation
+emailAddress
+telephoneNumber
+}
+class Employee {}
+
+class SystemAdministrator {}
+
+class Agent {}
+
+class Owner {}
+
+class Client{}
+
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+
+class Role {
+designation
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+}
+
+class TypeOfBusiness{
+designation
+}
+
+class Advertisement {
+dateOfAdvertisement
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+class Residence {
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+}
+
+class House{
+existenceOfBasement
+existenceOfInhabitableLoft
+sunExposure
+}
+
+class Address{
+state
+district
+city
+}
+
+class Photograph{
+linkURI
+}
+
+class SocialSecurityCard {
+taxNumber
+}
+
+class Passport {
+number
+}
+
+class Equipment {
+designation
+}
+
+class TypeOfCommission{
+designation
+}
+
+class TypeOfProperty{
+designation
+}
+
+class Commission{
+value
+}
+
+class PropertyVisit{
+dateOfVisit
+}
+
+Property"*" ----- "1"Agent: responsible for <
+Property"*" -- "1"Client: visits <
+Property"1" -- "1"Address: located at >
+Property"1..*" -- "1"Owner: owns <
+Property"1" -- "1..30"Photograph: illustrates <
+Property"1" -- "1"Advertisement: describes <
+Property"*" -- "1"TypeOfProperty: characterized by >
+Property"1" -- "1"AdvertisementRequest: describes <
+Property  <|-- Residence
+
+PropertyVisit"*" -- "1"Client: requests <
+PropertyVisit"*" -- "1"Agent: guided by >
+
+Residence <|-- House
+Residence"1" -- "*"Equipment : contains >
+
+Address"1" -- "1"Store: located at <
+
+Person"1" -- "1"Passport: possesses >
+Person"*" -- "1"Address: lives at >
+Person"1" -- "1"SocialSecurityCard: possesses >
+Person <|--l Employee
+Person <|---  Client
+Client <|-- Owner
+
+Role"1" -- "*"Employee: defines >
+Role <|-- SystemAdministrator
+Role <|-- Agent
+
+Client"*" -- "*"Advertisement: consults >
+
+AdvertisementRequest"*" --l "1" Owner: requests <
+AdvertisementRequest"*" -- "1" Agent: validates <
+AdvertisementRequest"1" -- "1" Advertisement: derives from <
+
+Employee"*" - "1"Store: assigned to >
+Employee"*" -- "1"SystemAdministrator: registers <
+SystemAdministrator"1" -- "*"Store: registers >
+
+Agent"1" -- "*"Advertisement: publishes >
+Agent"1" --down "*"Commission: sets >
+
+Commission"*" -- "1"TypeOfCommission: characterized by >
+Commission"1" -- "1"Advertisement: present in >
+
+AdvertisementRequest"*" --down "1" TypeOfBusiness: present in <
+
+@enduml

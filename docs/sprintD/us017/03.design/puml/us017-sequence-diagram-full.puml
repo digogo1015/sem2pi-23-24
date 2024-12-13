@@ -1,0 +1,96 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Network Manager" as NetworkManager
+participant ":ListDealsUI" as UI
+participant ":ListDealsController" as Controller
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "advertisementRepository:\nAdvertisementRepository" as AdvRep
+participant ":RadixSort" as Radix
+participant ":BubbleSort" as Bubble
+participant ":Utils" as Utils
+
+
+
+
+activate NetworkManager
+
+    NetworkManager -> UI : asks to list all deals made
+    activate UI
+
+    UI --> NetworkManager : displays sort methods and \n list order options(ascending/descending)
+    deactivate UI
+
+    NetworkManager -> UI : selects data
+        activate UI
+
+        UI -> Controller ** : create
+
+        UI -> Controller : listAllDeals(sortMethod,\n ascendingOrDescending)
+        activate Controller
+
+         Controller -> Repositories:getInstance()
+                            activate Repositories
+
+            Repositories --> Controller: repositories
+            deactivate Repositories
+
+            Controller -> repositories : getAdvertisementRepository()
+            activate repositories
+
+            repositories --> Controller : AdvertisementRepository
+            deactivate repositories
+
+            Controller -> AdvRep : getAllDeals()
+            activate AdvRep
+
+            AdvRep --> Controller : dealList
+            deactivate AdvRep
+
+            Controller -> AdvRep : getAreaList(dealList, sortMethod, ascendingOrDescending)
+            activate AdvRep
+
+            AdvRep -> AdvRep : areaList
+
+            alt sortMethod =  RadixSort
+
+            AdvRep -> Radix : sort(areaList)
+            activate Radix
+
+            Radix --> AdvRep : sortedAreaList
+            deactivate Radix
+
+            else
+
+            AdvRep -> Bubble : sort(areaList)
+                        activate Bubble
+
+                        Bubble --> AdvRep : sortedAreaList
+                                    deactivate Bubble
+
+            end
+
+            opt ascendingOrDescending = Descending
+
+            AdvRep -> Utils : reverseList(sortedAreaList)
+            activate Utils
+
+            Utils--> AdvRep : reverseSortedAreaList
+            deactivate Utils
+
+            end
+
+            AdvRep --> Controller : sortedAreaList
+            deactivate AdvRep
+
+            Controller --> UI : sortedAreaList
+
+        UI --> NetworkManager : display sorted deal list
+        deactivate UI
+       
+@enduml

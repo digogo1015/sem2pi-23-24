@@ -1,0 +1,451 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Client" as User
+participant ":VisitRequestUI" as UI
+participant ":VisitRequestController" as CTRL
+participant "manageAdvertisementRepository\n:manageAdvertisementRepository" as manageAdvertisement
+participant "manageVisitRequestRepository\n:ManageVisitRequestRepository" as manageVisitRequest
+participant "visitRequest\n:VisitRequest" as visitRequest
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "visitRequestRepository\n:VisitRequestRepository" as visitRequestRepository
+participant "advertisementRepository\n:AdvertisementRepository" as advertisementRepository
+participant "filtersRepository\n:FiltersRepository" as filtersRepository
+participant "propertyRepository\n:PropertyRepository" as propertyRepository
+participant "comparatorAscendingPrice\n:comparatorAscendingPrice" as ComparatorAscendingPrice
+participant "comparatorDescendingPrice\n:ComparatorDescendingPrice" as ComparatorDescendingPrice
+participant "cityAlphabetic\n:CityAlphabetic" as CityAlphabetic
+participant "cityAlphabeticReverse\n:CityAlphabeticReverse" as CityAlphabeticReverse
+participant "stateAlphabetic\n:StateAlphabetic" as StateAlphabetic
+participant "stateAlphabeticReverse\n:StateAlphabeticReverse" as StateAlphabeticReverse
+
+
+activate User
+
+        User -> UI : Asks to list properties
+
+        activate UI
+
+            UI -> CTRL** : create
+
+            UI -> CTRL : displaysList()
+            activate CTRL
+
+                CTRL -> manageAdvertisement : getAdvertisements()
+                activate manageAdvertisement
+
+                    manageAdvertisement -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> manageAdvertisement: repositories
+                    deactivate RepositorySingleton
+
+                    manageAdvertisement -> PLAT : getSortingMethodsRepository
+                    activate PLAT
+
+                    PLAT --> manageAdvertisement: PropertyRepository
+                    deactivate PLAT
+
+                    manageAdvertisement -> advertisementRepository : getAdvertisements()
+                    activate advertisementRepository
+
+                    advertisementRepository --> manageAdvertisement : advertisementsList
+                    deactivate advertisementRepository
+
+                    manageAdvertisement --> CTRL : advertisementsList
+                    deactivate manageAdvertisement
+
+                CTRL -> UI : displaysList(advertisementsList)
+                deactivate CTRL
+
+            UI --> User : Displays properties by most recent order
+            deactivate UI
+
+    opt Filters
+
+            User -> UI : Asks to filter properties
+            activate UI
+
+            UI -> CTRL : displaysList()
+            activate CTRL
+
+                CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> PLAT : getPropertiesRepository()
+                activate PLAT
+
+                PLAT --> CTRL: filtersRepository
+                deactivate PLAT
+
+                CTRL -> filtersRepository : getSortingMethods()
+                activate filtersRepository
+
+                filtersRepository --> CTRL : SortingMethods
+                deactivate filtersRepository
+
+                CTRL --> UI : displaysList(sortingCriteria)
+                deactivate CTRL
+
+
+        UI --> User : Displays sorting criteria list
+    deactivate UI
+
+        User -> UI : Selects sorting criteria
+    activate UI
+
+            UI -> CTRL : displaysList()
+            activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getTypeOfPropertyRepository()
+            activate PLAT
+
+            PLAT --> CTRL: filtersRepository
+            deactivate PLAT
+
+            CTRL -> filtersRepository : getListTypeOfProperty()
+            activate filtersRepository
+
+            filtersRepository --> CTRL : ListTypeOfProperty
+            deactivate filtersRepository
+
+            CTRL --> UI : displaysList(ListTypeOfProperty)
+            deactivate CTRL
+
+        UI --> User : Displays type of property filter
+        deactivate UI
+
+    alt Type Of Property = Land || Apartment || House
+
+        User -> UI : Selects type of property filter
+        activate UI
+
+    end
+        UI -> CTRL : displaysList()
+
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : filtersRepository()
+            activate PLAT
+
+            PLAT --> CTRL: filtersRepository
+            deactivate PLAT
+
+            CTRL -> filtersRepository : getListTypeOfBusiness()
+            activate filtersRepository
+
+            filtersRepository --> CTRL : ListTypeOfBusiness
+            deactivate filtersRepository
+
+            CTRL --> UI : displaysList(ListTypeOfBusiness)
+            deactivate CTRL
+
+        UI --> User : Displays type of business filter
+
+        deactivate UI
+
+    alt Type Of Business = Sale || Rent
+
+        User -> UI : Selects type of business filter
+        activate UI
+
+    end
+        UI -> CTRL : displaysList()
+
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getNumberOfBedroomsRepository()
+            activate PLAT
+
+            PLAT --> CTRL: filtersRepository
+            deactivate PLAT
+
+            CTRL -> filtersRepository : getListNumberOfBedrooms()
+            activate filtersRepository
+
+            filtersRepository --> CTRL : ListNumberOfBedrooms
+            deactivate filtersRepository
+
+            CTRL --> UI : displaysList(ListNumberOfBedrooms)
+            deactivate CTRL
+
+        UI --> User : Displays number of bedrooms filter
+
+        deactivate UI
+
+        alt Number Of Bedrooms = T0 || T1 || T2 || T3 || T4 || T5 || T5+
+
+        User -> UI : Selects type of business filter
+            activate UI
+        end
+
+        UI --> User : Displays selected data
+        deactivate UI
+
+
+        User -> UI : Submits data
+    activate UI
+
+
+
+     UI -> CTRL : getSortedListByFilters(typeOfBusiness,\n typeOfProperty,numberOfBedrooms, sortingMethod)
+     activate CTRL
+
+             CTRL -> manageAdvertisement : getSortedListByFilters(typeOfBusiness, \n visitRequest
+         activate manageAdvertisement
+
+                 manageAdvertisement -> RepositorySingleton : getInstance()
+                 activate RepositorySingleton
+
+                 RepositorySingleton --> manageAdvertisement: repositories
+                 deactivate RepositorySingleton
+
+                 manageAdvertisement -> PLAT : getPropertyRepository()
+                 activate PLAT
+
+                 PLAT --> manageAdvertisement : propertyRepository
+                 deactivate PLAT
+
+                manageAdvertisement --> propertyRepository : getListOfProperties
+                activate propertyRepository
+
+                propertyRepository --> manageAdvertisement : listOfProperties
+                deactivate propertyRepository
+
+                 manageAdvertisement -> manageAdvertisement : getListByFilters(typeOfBusiness, \n visitRequest
+
+                      loop for each property
+
+                         activate manageAdvertisement
+                         manageAdvertisement -> manageAdvertisement : verifyPropertyByFilters(property)
+                         activate manageAdvertisement
+                         manageAdvertisement --> manageAdvertisement : true/false
+                         deactivate manageAdvertisement
+
+                      |||
+
+                      end
+                           manageAdvertisement --> manageAdvertisement : listOfPropertiesFiltered
+
+                     deactivate manageAdvertisement
+
+    manageAdvertisement -> manageAdvertisement : getSortedList(list, sortingCriteria)
+    activate manageAdvertisement
+
+
+         alt Sorting Method = Ascending Price
+
+
+                    manageAdvertisement -> filtersRepository : getSortingMethods(ComparatorAscendingPrice)
+                    activate filtersRepository
+
+                    filtersRepository --> manageAdvertisement: ComparatorAscendingPrice
+                    deactivate filtersRepository
+
+                    manageAdvertisement -> ComparatorAscendingPrice : ComparatorAscendingPrice(advertisementsList)
+                    activate ComparatorAscendingPrice
+
+                    ComparatorAscendingPrice --> manageAdvertisement : ListSorted
+                    deactivate ComparatorAscendingPrice
+
+            |||
+            else Sorting Method = Descending Price
+
+                    manageAdvertisement -> filtersRepository : getSortingMethods(ComparatorDescendingPrice)
+                    activate filtersRepository
+
+                    filtersRepository --> manageAdvertisement: ComparatorDescendingPrice
+                    deactivate filtersRepository
+
+                    manageAdvertisement -> ComparatorDescendingPrice : ComparatorDescendingPrice(advertisementsList)
+                    activate ComparatorDescendingPrice
+
+                    ComparatorDescendingPrice --> manageAdvertisement : ListSorted
+                    deactivate ComparatorDescendingPrice
+            |||
+            else Sorting Method = City Alphabetic
+
+                    manageAdvertisement -> filtersRepository : getSortingMethods(CityAlphabetic)
+                    activate filtersRepository
+
+                    filtersRepository --> manageAdvertisement: CityAlphabetic
+                    deactivate filtersRepository
+
+                    manageAdvertisement -> CityAlphabetic : CityAlphabetic(advertisementsList)
+                    activate CityAlphabetic
+
+                    CityAlphabetic --> manageAdvertisement : ListSorted
+                    deactivate CityAlphabetic
+            |||
+            else Sorting Method = City Alphabetic Reverse
+
+                    manageAdvertisement -> filtersRepository : getSortingMethods(CityAlphabeticReverse)
+                    activate filtersRepository
+
+                    filtersRepository --> manageAdvertisement: CityAlphabeticReverse
+                    deactivate filtersRepository
+
+                    manageAdvertisement -> CityAlphabeticReverse : CityAlphabeticReverse(advertisementsList)
+                    activate CityAlphabeticReverse
+
+                    CityAlphabeticReverse --> manageAdvertisement : ListSorted
+                    deactivate CityAlphabeticReverse
+            |||
+            else Sorting Method = State Alphabetic
+
+                    manageAdvertisement -> filtersRepository : getSortingMethods(StateAlphabetic)
+                    activate filtersRepository
+
+                    filtersRepository --> manageAdvertisement: StateAlphabetic
+                    deactivate filtersRepository
+
+                    manageAdvertisement -> StateAlphabetic : StateAlphabetic(advertisementsList)
+                    activate StateAlphabetic
+
+                    StateAlphabetic --> manageAdvertisement : ListSorted
+                    deactivate StateAlphabetic
+
+            |||
+            else Sorting Method = State Alphabetic Reverse
+
+                    manageAdvertisement -> filtersRepository : getSortingMethods(StateAlphabeticReverse)
+                    activate filtersRepository
+
+                    filtersRepository --> manageAdvertisement: StateAlphabeticReverse
+                    deactivate filtersRepository
+
+                    manageAdvertisement -> StateAlphabeticReverse : StateAlphabeticReverse(advertisementsList)
+                    activate StateAlphabeticReverse
+
+                    StateAlphabeticReverse --> manageAdvertisement : ListSorted
+                    deactivate StateAlphabeticReverse
+            |||
+            end
+
+    manageAdvertisement --> manageAdvertisement : listOfPropertiesFiltered
+    deactivate manageAdvertisement
+
+    manageAdvertisement --> CTRL : listOfPropertiesFiltered
+    deactivate manageAdvertisement
+
+
+     CTRL --> UI: listOfPropertiesFiltered
+     deactivate CTRL
+
+    UI --> User :  Displays all properties that suit the filters
+    deactivate UI
+
+
+    deactivate UI
+
+    end
+
+
+
+alt property
+    User-> UI : Selects a property
+    activate UI
+end
+
+    UI --> User : Shows selected property
+    deactivate UI
+
+    User -> UI : Asks to send a message to schedule a visit
+    activate UI
+
+        UI --> User : Requests a date of visit
+    deactivate UI
+
+    User -> UI : Types the year, month and day to visit
+    activate UI
+
+         UI --> User : Requests a time to start the visit
+    deactivate UI
+
+    User -> UI : Types hour and minute desired
+    activate UI
+
+         UI --> User : Requests a time to end the visit
+    deactivate UI
+
+    User -> UI : Types hour and minute desired
+    activate UI
+
+        UI --> User : Displays message typed and asks to confirm
+    deactivate UI
+
+    User -> UI : Submits request(name, phoneNumber,\n dateOfVisit, timeSlotStart, timeSlotStart, message)
+    activate UI
+
+    UI -> CTRL : addVisitRequest(name, phoneNumber,\n dateOfVisit, timeSlotStart, timeSlotStart, message)
+    activate CTRL
+
+
+    
+    CTRL -> manageVisitRequest : addVisitRequest(name, phoneNumber,\n dateOfVisit, timeSlotStart, timeSlotStart, message)
+            activate manageVisitRequest
+    
+            manageVisitRequest -> visitRequest** : addVisitRequest(name, phoneNumber,\n dateOfVisit, timeSlotStart, timeSlotStart, message)
+
+            manageVisitRequest -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+    
+            RepositorySingleton --> manageVisitRequest : repositories
+            deactivate RepositorySingleton
+    
+            manageVisitRequest -> PLAT : getVisitRequestRepository()
+            activate PLAT
+    
+            PLAT --> manageVisitRequest : VisitRequestRepository
+            deactivate PLAT
+    
+            manageVisitRequest -> visitRequestRepository : addVisitRequest(request)
+            activate visitRequestRepository
+    
+            visitRequestRepository --> manageVisitRequest
+            deactivate visitRequestRepository
+
+            manageVisitRequest --> CTRL : shows operation success
+            deactivate manageVisitRequest
+
+
+
+
+
+    CTRL -> UI :Shows operations success
+    deactivate CTRL
+        UI --> User : Displays operation success
+    deactivate UI
+
+
+
+deactivate User
+
+@enduml

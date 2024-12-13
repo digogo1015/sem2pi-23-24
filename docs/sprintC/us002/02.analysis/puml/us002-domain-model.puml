@@ -1,0 +1,107 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide circle
+hide empty members
+
+
+class Equipment{
+designation
+}
+class Photograph{
+linkURI
+}
+class Commission{
+value
+}
+class Property {
+area
+distanceCityCentre
+}
+class Residence {
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+}
+class House{
+existenceOfBasement
+existenceOfInhabitableLoft
+sunExposure
+}
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+class Owner {
+}
+class Agent {
+}
+class TypeOfCommission{
+designation
+}
+class Address{
+state
+district
+city
+}
+class SocialSecurityCard {
+taxNumber
+}
+class Passport {
+number
+}
+class Advertisement {
+dateOfAdvertisement
+price
+rentperiod
+status
+}
+class TypeOfProperty{
+designation
+}
+class TypeOfBusiness{
+designation
+}
+class Role {
+designation
+}
+package hide{
+class fix {
+}
+hide hide
+}
+Person"*" - "1"Address: lives at >
+Person"1" -- "1"SocialSecurityCard: possesses >
+Person"1" - "1"Passport: possesses >
+
+Role"1" -left "*"Employee: defines >
+Role <|--r Agent
+Person <|-- Employee
+
+Advertisement"*" -- "1" TypeOfBusiness: present in <
+fix --[hidden]up Advertisement: f
+
+Owner - Property: owns >
+Address"1" --- "1"Property: located at <
+Property"1" ---up "1..30"Photograph: illustrates <
+Property"*" ---up "1"TypeOfProperty: characterized by >
+
+Commission"*" - "1"TypeOfCommission: characterized by >
+Commission"1" --left "1"Advertisement: present in >
+
+fix -[hidden]up "1" Agent: f
+fix --[hidden]l "1" Owner: f
+
+Property  <|--right Residence
+Residence <|--right House
+Residence --up Equipment : contains >
+Person <|--  Owner
+Agent"1" - "*"Advertisement: publishes >
+Agent"1" - "*"Commission: sets >
+Owner -- Agent: requests and\n gives info to >
+Property"*" - "1"Agent: responsible for <
+Advertisement --up Property: based on >
+@enduml

@@ -1,0 +1,73 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client {
+}
+
+class Advertisement {
+    dateOfAdvertisement
+    status
+}
+
+class AdvertisementRequest {
+    price
+    dateOfRequest
+}
+class TypeOfBusiness{
+designation
+}
+
+class Property{
+area
+distanceCityCentre
+}
+
+class Photograph{
+linkURI
+}
+
+class Address{
+state
+district
+city
+}
+
+class TypeOfProperty{
+designation
+}
+
+class Residence{
+numberOfBedrooms
+numberOfBathrooms
+numberOfParkingSpaces
+}
+
+class House{
+existenceOfBasement
+existenceOfInhabitableLoft
+sunExposure
+}
+
+class Equipment{
+designation
+}
+
+Client "*" -- "*" Advertisement: consults >
+Advertisement"1" --l "1"AdvertisementRequest: derives from >
+TypeOfBusiness "1" -- "*" AdvertisementRequest: present in >
+Advertisement "1" -- "1" Property: describes >
+Photograph "1..30" --r "1" Property: illustrates >
+Property"*" -- "1" TypeOfProperty: characterized by >
+Residence <|--down House
+Residence"1" --up "*" Equipment: contains >
+Address"1" --up "1" Property: located at <
+Property <|--r Residence
+
+@enduml

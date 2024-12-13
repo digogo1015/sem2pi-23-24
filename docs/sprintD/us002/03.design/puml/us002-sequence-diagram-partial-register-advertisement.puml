@@ -1,0 +1,72 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 22
+
+
+participant "manageAdvertisementRepository\n:ManageAdvertisementRepository" as manageAdvertisements
+participant "Advertisement:\nAdvertisement" as Advertisement
+participant "manageRequestRepository\n:ManageRequestRepository" as manageRequests
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "AdvertisementRepository:\nAdvertisementRepository" as AdvertisementRepository
+
+
+
+                    -> manageAdvertisements : submitAdvertisement(price, area, distCityCenter, address,\n photographs(linkURI), commission value,\ nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation, SunExposure, Basement, Loft,\n TypeofBusiness, TypeofProperty, TypeofCommission, agent)
+                    autonumber 22.1
+                    activate manageAdvertisements
+
+                    manageAdvertisements -> manageRequests : createRequest(price, area, distCityCenter, address,\n photographs(linkURI),\ nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation, SunExposure, Basement, Loft,\n TypeofBusiness, TypeofProperty, Agent)
+                    activate manageRequests
+
+                                        manageRequests ->manageRequests : getDate()
+                                                            activate manageRequests
+
+                                                            manageRequests --> manageRequests : dateOfRequest
+                                                            deactivate manageRequests
+
+                                                            manageRequests -> Property** : createProperty(price, area, distCityCenter, address,\n photographs(linkURI),\ nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation, SunExposure, Basement, Loft,\n TypeofBusiness, TypeofProperty)
+
+
+                                                            manageRequests -> Request** : createRequest(property, agent, dateOfRequest)
+
+manageRequests --> manageAdvertisements : request
+deactivate manageRequests
+
+
+                    manageAdvertisements ->manageAdvertisements : getDate()
+                    activate manageAdvertisements
+
+                    manageAdvertisements --> manageAdvertisements : dateOfAdvertisement
+                    deactivate manageAdvertisements
+
+                                       manageAdvertisements -> Advertisement** : createAdvertisement(request, typeOfCommission, commissionValue, dateOfAdvertisement)
+
+
+                                        manageAdvertisements -> manageAdvertisements : validateAdvertisement(Advertisement)
+
+                         manageAdvertisements -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> manageAdvertisements: repositories
+                                deactivate RepositorySingleton
+
+                                manageAdvertisements -> PLAT : getAdvertisementRepository()
+                                activate PLAT
+
+                                    PLAT --> manageAdvertisements: AdvertisementRepository
+                                deactivate PLAT
+
+                                manageAdvertisements -> AdvertisementRepository : addAdvertisement(Advertisement)
+                                activate AdvertisementRepository
+
+                                AdvertisementRepository --> manageAdvertisements :
+                                deactivate AdvertisementRepository
+                                autonumber 23
+                                <- manageAdvertisements: Advertisement
+                            deactivate manageAdvertisements
+
+@enduml

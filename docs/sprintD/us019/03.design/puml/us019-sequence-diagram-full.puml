@@ -1,0 +1,119 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Network Manager" as NetworkManager
+participant ":DivideStoresUI" as UI
+participant ":DivideStoresController" as Controller
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "advertisementRepository:\nAdvertisementRepository" as AdvRep
+participant "storeRepository:\nStoreRepository" as StrRep
+participant ":BruteForce" as BruteForce
+participant "store:\nStore" as Str
+
+activate NetworkManager
+
+    NetworkManager ->  UI : asks to divide a set of stores
+    activate  UI
+
+     UI --> NetworkManager : requests data (number os stores to be divided)
+    deactivate  UI
+
+    NetworkManager ->  UI : submits data
+        activate  UI
+
+        UI -> Controller ** : create
+
+         UI -> Controller : getStores()
+         activate Controller
+
+         Controller -> Repositories:getInstance()
+                                     activate Repositories
+
+                     Repositories--> Controller: repositories
+                     deactivate Repositories
+
+                     Controller -> repositories : getStoreRepository()
+                     activate repositories
+
+                     repositories --> Controller : StoreRepository
+                     deactivate repositories
+
+                     Controller -> StrRep : copy()
+                     activate StrRep
+
+                     StrRep --> Controller : storeList
+                     deactivate StrRep
+
+                     Controller -> Controller : divideStores(storeList)
+                     activate Controller
+
+                     Controller -> Controller : getPropertyNumbers(storeList)
+                     activate Controller
+
+                           Controller -> Repositories:getInstance()
+                                                          activate Repositories
+
+                                          Repositories--> Controller: repositories
+                                          deactivate Repositories
+
+                                          Controller -> repositories : getAdvertisementRepository()
+                                          activate repositories
+
+                                          repositories --> Controller : AdvertisementRepository
+                                          deactivate repositories
+
+                                          loop for each store in storeList
+
+
+
+                                          Controller -> Str : getDesignation(store)
+                                          activate Str
+
+                                          Str --> Controller : designation
+                                          deactivate Str
+
+
+                                          Controller -> AdvRep : getNumPropertiesByDesignation(designation)
+                                          activate AdvRep
+
+                                          AdvRep --> Controller : storeNumberOfProperties
+                                          deactivate AdvRep
+
+                                          end
+
+                                          Controller -> Controller : propertyNumbers
+                                          deactivate Controller
+
+                                          Controller -> BruteForce : sort(propertyNumbers)
+                                          activate BruteForce
+
+                                          BruteForce --> Controller : sortedPropertyNumbers
+                                          deactivate BruteForce
+
+                                          Controller -> BruteForce : formatBruteForce(sortedPropertyNumbers, storeList)
+                                          activate BruteForce
+
+                                          BruteForce --> Controller : results
+                                          deactivate BruteForce
+
+                                          Controller --> Controller : results
+                                          deactivate Controller
+
+                                          Controller --> UI : results
+                                          deactivate Controller
+
+
+
+
+
+         UI --> NetworkManager : displays the two subsets of stores
+        deactivate  UI
+
+
+@enduml

@@ -1,0 +1,91 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+class LinearRegressionUI {}
+
+class LinearRegressionController{
++getRegression(typeOfLinearRegression)
++regressionOperations(IC, x1, x2, x3, x4, x5, betaValue, linearOperation)
++regressionOperations(IC, x, bValue, aValue)
+}
+
+class Repositories{
++getInstance
++getAdvertisementRepository
+}
+
+class AdvertisementRepository{
+-List<Advertisement> advertisementList
+
++getMultipleRegression()
++getSimpleRegression(typeOfLinearRegression)
++getMultipleRegression()
++getSimpleRegression(typeOfLinearRegression)
+}
+
+class LinearSimpleRegression{
+-TDistribution distribution
+- SimpleRegression simpleRegression;
+- long n;
+- double a;
+- double b;
+- DecimalFormat df
+
++simpleRegressionInfo()
++simpleRegressionPrediction(x)
++simpleRegressionHypothesisTest(aValue, bValue, IC)
++simpleRegressionConfidence(IC)
++simpleRegressionAnova()
+}
+
+class LinearMultipleRegression{
+- OLSMultipleLinearRegression multipleLinearRegression;
+- double[] y;
+- double[][] x;
+- TDistribution distribution;
+- FDistribution fadistribution;
+- double n;
+- double k;
+- double betas[];
+- double XtX[][];
+- DecimalFormat df
+
++multipleRegressionInfo()
++multipleRegressionPrediction(x1, x2, x3, x4, x5)
++multipleRegressionHypothesisTest(IC, betaValue)
++multipleRegressionConfidence(IC)
++multipleRegressionAnova(IC)
+}
+
+class Advertisement{
+-String dateOfAdvertisement
+-Request request
+-Commission commission
+-ArrayList<PurchaseOrder> purchaseOrderList
+-ArrayList<VisitRequest> visitRequestList
+-String status
+-Store store
+
++getStore()
++getAllDeals
++copy()
+
+}
+
+LinearRegressionUI ..> LinearRegressionController
+
+LinearRegressionController ..> Repositories
+LinearRegressionController ..> AdvertisementRepository
+LinearRegressionController ..> LinearSimpleRegression
+LinearRegressionController ..> LinearMultipleRegression
+
+Repositories --> "1" AdvertisementRepository
+
+AdvertisementRepository"1" --> "*"Advertisement
+
+@enduml

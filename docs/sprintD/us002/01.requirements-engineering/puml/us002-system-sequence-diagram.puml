@@ -1,0 +1,108 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+    Agent -> System : asks to create a new property advertisement
+    activate System
+        System --> Agent : requests Client Data(name, telephone number, email, passport card number, tax number, address)
+    deactivate System
+
+    Agent -> System : types Client Data(name, telephone number, email, passport card number, tax number, address)
+            activate System
+                System --> Agent : asks to select type of Business
+            deactivate System
+
+    Agent -> System : selects type of Business
+            activate System
+alt typeOfBusiness = rent
+                 System --> Agent : asks to type rent period
+            deactivate System
+
+    Agent -> System : types rent period
+            activate System
+end
+                 System --> Agent : asks to select type of Property
+            deactivate System
+
+    Agent -> System : selects type of Property
+        activate System
+            System --> Agent : requests Property data(address, area, distance to city center)
+        deactivate System
+
+    Agent -> System : types Property data(address, area, distance to city center)
+    activate System
+        System --> Agent : asks user to type number of photographs to introduce
+    deactivate System
+
+    Agent -> System : types number of photographs to introduce
+        activate System
+loop for each photograph
+            System --> Agent : asks user to type photograph location
+        deactivate System
+
+    Agent -> System : types photograph location
+    activate System
+end
+alt typeOfProperty = House || Apartment
+        System --> Agent : asks user to select number of bedrooms
+    deactivate System
+
+    Agent -> System : selects number of bedrooms
+        activate System
+        System --> Agent : asks user to type remaining data (number of BathRooms, number of Parking Spaces).
+    deactivate System
+
+    Agent -> System : submits data
+        activate System
+            System --> Agent : asks user to type number of equipments to introduce
+        deactivate System
+
+    Agent -> System : types number of equipments to introduce
+        activate System
+loop for each equipment
+            System --> Agent : asks user to type equipment description
+        deactivate System
+
+    Agent -> System : types equipment description
+end
+
+alt typeOfProperty = House
+        System --> Agent : asks user to select remaining data (SunExposure, Basement, Loft).
+    deactivate System
+
+    Agent -> System : selects remaining data
+    activate System
+end
+end
+
+        System --> Agent : asks user to type Property Price
+    deactivate System
+
+    Agent -> System : types Property Price
+        activate System
+            System --> Agent : asks user to select type of Commission
+        deactivate System
+
+    Agent -> System : selects type of Commission
+        activate System
+            System --> Agent : asks user to type Commission value
+        deactivate System
+
+    Agent -> System : types Commission value
+            activate System
+                System --> Agent : shows completed advertisement and asks user to confirm procedure
+            deactivate System
+
+    Agent -> System : confirms or not procedure
+                activate System
+                    System --> Agent : shows operation success
+                deactivate System
+@enduml

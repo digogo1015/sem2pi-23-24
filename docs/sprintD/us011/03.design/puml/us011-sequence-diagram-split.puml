@@ -1,0 +1,73 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Agent" as ADM
+participant ":ManagePurchaseOrdersUI" as UI
+participant ":ManagePurchaseOrdersController" as CTRL
+participant "manageAdvertisementRepository\n:ManageAdvertisementRepository" as manageAdvertisement
+
+activate ADM
+
+        ADM -> UI : asks to list purchase orders
+        activate UI
+            UI -> CTRL** : create
+
+            UI -> CTRL : getAgent()
+            activate CTRL
+                ref over CTRL
+                Get agent info
+                end ref
+                CTRL --> UI : Agent
+            deactivate CTRL
+
+            UI -> CTRL : getListOfAdvertisementByAgent(Employee agent)
+            activate CTRL
+                ref over CTRL
+                Get purchase order list
+                end ref
+                CTRL --> UI : PurchaseOrderList
+            deactivate CTRL
+
+            UI -> CTRL : getVisiblePurchaseOrders(ArrayList<PurchaseOrder> PurchaseOrderList)
+            activate CTRL
+                ref over CTRL
+                Get visible purchase order list
+                end ref
+                CTRL --> UI : VisiblePurchaseOrderList
+            deactivate CTRL
+
+            UI --> ADM : shows list of purchase orders grouped by advertisement an sorted\nby most recent advertisement
+        deactivate UI
+
+    ADM -> UI : selects purchase order
+    activate UI
+
+        UI --> ADM : shows purchase order and asks user either to accept or decline order
+    deactivate UI
+
+    ADM -> UI : selects either to accept or decline
+    activate UI
+
+        UI -> CTRL :  setStatus(status)
+                activate CTRL
+
+                            CTRL -> manageAdvertisement : setStatus(status)
+                            activate manageAdvertisement
+                                ref over manageAdvertisement
+                                Set purchase order status
+                                end ref
+                                manageAdvertisement --> CTRL : Purchase Order
+                            deactivate manageAdvertisement
+
+                  CTRL -> UI: Purchase Order
+                deactivate CTRL
+    UI -> ADM: show operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

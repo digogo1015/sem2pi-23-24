@@ -1,0 +1,163 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Agent" as ADM
+participant ":ManagePurchaseOrdersUI" as UI
+participant ":ManagePurchaseOrdersController" as CTRL
+participant "manageAdvertisementRepository\n:ManageAdvertisementRepository" as manageAdvertisement
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "advertisementRepository:\nAdvertisementRepository" as AdvertisementRepository
+participant "employeeRepository:\nEmployeeRepository" as EmployeeRepository
+participant "userSession:\nUserSession" as UserSession
+
+
+
+activate ADM
+
+        ADM -> UI : asks to list purchase orders
+
+        activate UI
+
+            UI -> CTRL** : create
+
+            UI -> CTRL : getAgent()
+                                    activate CTRL
+                                    CTRL -> manageAdvertisement : getAgent()
+                                                    activate manageAdvertisement
+
+                                                        manageAdvertisement -> RepositorySingleton : getInstance()
+                                                        activate RepositorySingleton
+
+                                                        RepositorySingleton --> manageAdvertisement: repositories
+                                                        deactivate RepositorySingleton
+
+                                                        manageAdvertisement -> PLAT : getEmployeeRepository
+                                                        activate PLAT
+
+                                                        PLAT --> manageAdvertisement: EmployeeRepository
+                                                        deactivate PLAT
+
+                                                        manageAdvertisement -> EmployeeRepository : getEmployeeByEmail()
+                                                        activate EmployeeRepository
+
+                                                        EmployeeRepository -> UserSession : getUserID()
+                                                        activate UserSession
+
+                                                        UserSession -> EmployeeRepository : UserID
+                                                        deactivate UserSession
+
+                                                        EmployeeRepository --> manageAdvertisement : EmployeeInfo
+                                                        deactivate EmployeeRepository
+
+                                                        manageAdvertisement --> CTRL : Agent
+                                                        deactivate manageAdvertisement
+
+                                        CTRL --> UI : Agent
+                                    deactivate CTRL
+
+            UI -> CTRL : getListOfAdvertisementByAgent(Employee agent)
+            activate CTRL
+            CTRL -> manageAdvertisement : getListOfAdvertisementByAgent(Employee agent)
+                            activate manageAdvertisement
+
+                                manageAdvertisement -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                RepositorySingleton --> manageAdvertisement: repositories
+                                deactivate RepositorySingleton
+
+                                manageAdvertisement -> PLAT : getAdvertisementRepository
+                                activate PLAT
+
+                                PLAT --> manageAdvertisement: AdvertisementRepository
+                                deactivate PLAT
+
+                                manageAdvertisement -> AdvertisementRepository : getPurchaseOrders()
+                                activate AdvertisementRepository
+
+                                AdvertisementRepository --> manageAdvertisement : PurchaseOrderList
+                                deactivate AdvertisementRepository
+
+                                manageAdvertisement -> manageAdvertisement : sortByAgent(Employee agent)
+                                manageAdvertisement --> CTRL : PurchaseOrderList
+                                deactivate manageAdvertisement
+
+                CTRL --> UI : PurchaseOrderList
+            deactivate CTRL
+
+            UI -> CTRL : getVisiblePurchaseOrder(ArrayList<PurchaseOrder> PurchaseOrderList)
+                        activate CTRL
+                        CTRL -> manageAdvertisement : getVisiblePurchaseOrder(ArrayList<PurchaseOrder> PurchaseOrderList)
+                                        activate manageAdvertisement
+
+                                            manageAdvertisement -> RepositorySingleton : getInstance()
+                                            activate RepositorySingleton
+
+                                            RepositorySingleton --> manageAdvertisement: repositories
+                                            deactivate RepositorySingleton
+
+                                            manageAdvertisement -> PLAT : getAdvertisementRepository
+                                            activate PLAT
+
+                                            PLAT --> manageAdvertisement: AdvertisementRepository
+                                            deactivate PLAT
+
+                                            manageAdvertisement -> manageAdvertisement : sortByStatus(String status)
+                                            manageAdvertisement --> CTRL : VisiblePurchaseOrderList
+                                            deactivate manageAdvertisement
+
+                            CTRL --> UI : VisiblePurchaseOrderList
+                        deactivate CTRL
+
+            UI --> ADM : shows list of purchase orders grouped by advertisement an sorted\nby most recent advertisement
+        deactivate UI
+
+    ADM -> UI : selects purchase order
+    activate UI
+
+        UI --> ADM : shows purchase order and asks user either to accept or decline order
+    deactivate UI
+
+    ADM -> UI : selects either to accept or decline
+    activate UI
+
+        UI -> CTRL :  setStatus(status)
+        activate CTRL
+
+                    CTRL -> manageAdvertisement : setStatus(status)
+                    activate manageAdvertisement
+
+                         manageAdvertisement -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> manageAdvertisement: repositories
+                                deactivate RepositorySingleton
+
+                                manageAdvertisement -> PLAT : getAdvertisementRepository()
+                                activate PLAT
+
+                                    PLAT --> manageAdvertisement: AdvertisementRepository
+                                deactivate PLAT
+
+                                manageAdvertisement -> AdvertisementRepository : setStatus(status)
+                                activate AdvertisementRepository
+
+                                AdvertisementRepository --> manageAdvertisement :
+                                deactivate AdvertisementRepository
+
+                                manageAdvertisement --> CTRL : Purchase Order
+                            deactivate manageAdvertisement
+
+          CTRL -> UI: Purchase Order
+          deactivate CTRL
+    UI -> ADM: show operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

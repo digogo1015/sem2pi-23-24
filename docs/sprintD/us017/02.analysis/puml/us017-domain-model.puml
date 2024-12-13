@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+
+NetworkManager"1" --d "*"Advertisement : consults >
+AdvertisementRequest"1" --u "1" Advertisement: derives from <
+Property"1" --u "1"AdvertisementRequest: describes <
+
+@enduml

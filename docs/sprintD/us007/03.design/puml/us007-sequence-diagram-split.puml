@@ -1,0 +1,59 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+autonumber
+
+actor "Unregistered User" as UUser
+participant ":RegisterUserUI" as RegisterUserUI
+participant ":RegisterUserController" as RegisterUSerController
+participant "manageClient:\nManageClient" as MaClient
+
+
+activate UUser
+
+    UUser -> RegisterUserUI : asks to register in the system
+    activate RegisterUserUI
+
+        RegisterUserUI --> UUser : requests data
+    deactivate RegisterUserUI
+
+    UUser -> RegisterUserUI : types requested data (name, passportCardNumber,\n taxNumber, address, email, telephoneNumber, password)
+    activate RegisterUserUI
+
+
+
+
+
+
+        RegisterUserUI --> UUser : shows requested data
+    deactivate RegisterUserUI
+
+    UUser -> RegisterUserUI : submits data
+    activate RegisterUserUI
+
+    RegisterUserUI -> RegisterUSerController : registerUser(name, passportCardNumber,\n taxNumber, address, email, telephoneNumber, password)
+        activate RegisterUSerController
+
+        RegisterUSerController -> MaClient : registerUser(name, passportCardNumber,\n taxNumber, address, email, telephoneNumber, password)
+        activate MaClient
+
+        ref over MaClient
+               Register User
+               end ref
+
+                             MaClient --> RegisterUSerController : shows operation success
+                             deactivate MaClient
+
+                             RegisterUSerController --> RegisterUserUI : shows operation success
+
+        RegisterUserUI --> UUser : shows operation success
+    deactivate RegisterUserUI
+
+
+
+@enduml

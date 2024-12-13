@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":RegisterNewEmployeeController" as RegisterEmployeeController
+participant "manageRoleRepository:\nManageRoleRepository" as MaRole
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "roleRepository:\nRoleRepository" as RoleRep
+
+autonumber 5
+
+        -> RegisterEmployeeController : getRoles()
+
+        autonumber 5.1
+
+
+       activate RegisterEmployeeController
+
+       group Get Role List
+
+       RegisterEmployeeController -> MaRole : getRoles()
+               activate MaRole
+
+       MaRole -> Repositories : getInstance()
+       activate Repositories
+
+       Repositories --> MaRole : repositories
+       deactivate Repositories
+
+       MaRole -> repositories : getRoleRepository()
+       activate repositories
+
+       repositories --> MaRole : roleRepository
+       deactivate repositories
+
+       MaRole -> RoleRep : getRoles()
+       activate RoleRep
+
+       RoleRep --> MaRole : roleList
+       deactivate RoleRep
+
+       MaRole --> RegisterEmployeeController : roleList()
+       deactivate MaRole
+
+       end
+       autonumber 6
+
+       <-- RegisterEmployeeController : roleList
+       deactivate RegisterEmployeeController
+@enduml

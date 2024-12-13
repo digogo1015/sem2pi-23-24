@@ -1,0 +1,153 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Store Manager" as StoreManager
+participant ":LinearRegressionUI" as UI
+participant ":LinearRegressionController" as Controller
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "advertisementRepository:\nAdvertisementRepository" as AdvRep
+participant "linearMultipleRegression:\nLinearMultipleRegression" as LinMilt
+participant "linearSimpleRegression:\nLinearSimpleRegression" as LinSimp
+
+activate StoreManager
+
+    StoreManager -> UI : asks to analyse deals
+    activate UI
+
+    UI --> StoreManager : shows and asks to select the type of linear regression
+    deactivate UI
+
+    StoreManager -> UI : selects type of linear regression
+        activate UI
+
+        UI -> Controller** : create
+
+        UI -> Controller : getRegression(typeOfLinearRegression)
+                activate Controller
+
+                Controller -> Repositories:getInstance()
+                                            activate Repositories
+
+                            Repositories --> Controller: repositories
+                            deactivate Repositories
+
+                            Controller -> repositories : getAdvertisementRepository()
+                            activate repositories
+
+                            repositories --> Controller : AdvertisementRepository
+                            deactivate repositories
+
+        alt typeOfLinearRegression = Multiple Regression
+
+        Controller -> AdvRep : getMultipleRegression()
+        activate AdvRep
+
+
+
+        else
+
+        Controller -> AdvRep : getSimpleRegression(typeOfLinearRegression)
+
+        end
+
+        AdvRep --> Controller : regression
+        deactivate AdvRep
+
+        Controller --> UI : regression
+        deactivate Controller
+
+        alt type of linear regression = multiple regression
+
+        UI --> StoreManager: requests data(confidence interval, area, distance to city center,\n number of bedrooms, number of bathrooms, number of parking spaces, beta value)
+
+        else
+
+                UI --> StoreManager: requests data(confidence interval, independent variable in study, a Value , b Value)
+                deactivate UI
+        end
+
+        StoreManager -> UI : types data
+        activate UI
+
+        UI --> StoreManager : shows linear regression operations list and asks to select one
+        deactivate UI
+
+        StoreManager -> UI : selects linear regression operation and submits
+        activate UI
+
+        alt
+
+        UI -> Controller : regressionOperations (IC, area, distanceToCityCenter,\n numOfBedrooms, numOfBathrooms, numOfParkingSpaces, betaValue, linearOperation)
+                activate Controller
+
+                alt linearOperation = "Make a prediction"
+
+                Controller -> LinMilt : multipleRegressionPrediction(area, distanceToCityCenter,\n numOfBedrooms, numOfBathrooms, numOfParkingSpaces)
+                activate LinMilt
+
+
+                else linearOperation = "Get more Info"
+
+                Controller -> LinMilt : multipleRegressionInfo()
+
+               else linearOperation = "Hypothesis tests"
+
+               Controller -> LinMilt : multipleRegressionHypothesisTest(IC, betaValue)
+
+               else linearOperation = "Confidence Interval"
+               Controller -> LinMilt : multipleRegressionConfidence(IC)
+
+               else linearOperation = "ANOVA table"
+
+               Controller -> LinMilt : multipleRegressionAnova(IC)
+
+                end
+
+                LinMilt --> Controller : operationResult
+                deactivate LinMilt
+
+        else
+
+        UI -> Controller : regressionOperations (IC, x, linearOperation, aValue, bValue)
+
+
+                alt linearOperation = "Make a prediction"
+
+                                Controller -> LinSimp : simpleRegressionPrediction(x)
+                                activate LinSimp
+
+
+
+                                else linearOperation = "Get more Info"
+
+                                Controller -> LinSimp : simpleRegressionInfo()
+
+                               else linearOperation = "Hypothesis tests"
+
+                               Controller -> LinSimp : simpleRegressionHypothesisTest(aValue, bValue, IC)
+
+                               else linearOperation = "Confidence Interval"
+                               Controller -> LinSimp : simpleRegressionConfidence(IC)
+
+                               else linearOperation = "ANOVA table"
+
+                               Controller -> LinSimp : simpleRegressionAnova()
+
+                                end
+
+                                LinSimp --> Controller : operationResult
+
+        end
+
+        Controller --> UI : operationResult
+        deactivate Controller
+
+        UI --> StoreManager : shows results of linear regression operation
+        deactivate UI
+
+@enduml

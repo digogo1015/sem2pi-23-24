@@ -1,0 +1,55 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class NetworkManager{}
+
+class Store {
+designation
+emailAddress
+telephoneNumber
+}
+
+class Employee {}
+
+class Role {
+designation
+}
+
+class Agent {}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+NetworkManager "1" --d "*"Store: analyses >
+Employee "*" --u "1" Store: assigned to >
+Role "1" --up "*" Employee: defines >
+Role <|--r Agent
+Property "1" -- "1" AdvertisementRequest: describes <
+Agent "1" --r "*" Advertisement: publishes >
+AdvertisementRequest "1" -- "1" Advertisement: derives from <
+AdvertisementRequest"*" -- "1" Agent: validates <
+
+
+@enduml

@@ -1,0 +1,176 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+class ManageRequestUI {}
+
+class ManageRequestsController {
++requestTypeOfCommission()
++requestCommission()
++displayAndSelectAgentRequest(email)
++requestValidation(request)
++addAdvertisement(request, commission)
++getListOfTypeCommission()
++getAgentRequests(email)
++changeRequestStatus(request, status)
+}
+
+class ManageRequestRepository {
++getAgentRequest(email)
++changeRequestStatus(status)
+}
+class ManageAdvertisementRepository {
++addAdvertisement(request, status)
++validateAdvertisement(advertisement)
+}
+class ManageFilterRepository {
++getListOfCommission()
+}
+
+class Repositories {
+- Repositories()
++ getInstance() : Repositories
++getAuthenticationRepository()
++getAdvertisementRepository()
++getFilterRepository()
++getRequestRepository()
+}
+
+class RequestRepository {
++addRequest(request)
++copy()
++setRequestList()
+}
+class AdvertisementRepository {
++addAdvertisement(advertisement)
++copy()
+}
+class FilterRepository {
++getListOfCommission()
++copy()
+}
+class AuthenticationRepository{
+-AuthFacade authenticationFacade
++getCurrentUserSession()
+}
+
+class AuthFacade{
+-UserSession userSession
+-UserRoleStore roles
+-UserStore users
+
++getCurrentUserSession()
+}
+
+class Request {
+-Property property
+-Client client
+-Employee agent
+-String dateOfRequest
+-String typeOfBusiness
+-String price
+-String status
+
++setStatus(status)
+}
+class Advertisement {
+-Request request
+-Commission commission
+-String dateOfAdvertisement
+
+}
+class Commission {
+-String typeOfCommission
+-String value
+
+}
+
+class UserSession {
+-User user
+
++getUserId()
+}
+
+ManageRequestUI ..> ManageRequestsController
+ManageRequestsController ....> ManageAdvertisementRepository
+ManageRequestsController ....> ManageFilterRepository
+ManageRequestsController ....> ManageRequestRepository
+ManageRequestsController ......>AuthenticationRepository
+
+ManageRequestRepository..>Repositories
+ManageAdvertisementRepository..>Repositories
+ManageFilterRepository..>Repositories
+
+Repositories--> RequestRepository
+Repositories--> AdvertisementRepository
+Repositories--> AuthenticationRepository
+Repositories-->FilterRepository
+
+AuthenticationRepository --> AuthFacade
+AuthFacade-->UserSession
+
+
+ManageRequestRepository-u->Request
+RequestRepository-->Request
+ManageAdvertisementRepository->Advertisement
+AdvertisementRepository--> Advertisement
+Advertisement--> Commission
+Advertisement--> Request
+
+'RegisterEmployeeUI .down.> RegisterNewEmployeeController
+'
+'Repositories -> Repositories : instance
+
+'RegisterNewEmployeeController ...> ManageEmployeeRepository
+'RegisterNewEmployeeController ...> ManageRoleRepository
+'RegisterNewEmployeeController ...> ManageStoreRepository
+
+'ManageStoreRepository ..> Repositories : repositories
+'ManageRoleRepository ..> Repositories : repositories
+'ManageEmployeeRepository ..> Repositories : repositories
+
+
+'ManageStoreRepository ....> StoreRepository : StoreRepository
+'ManageRoleRepository ...> RoleRepository : RoleRepository
+'ManageEmployeeRepository ....> EmployeeRepository : EmployeeRepository
+
+
+
+
+'Repositories --> "1" StoreRepository
+'Repositories ---> "1" RoleRepository
+'Repositories --> "1" EmployeeRepository
+
+
+
+
+
+
+'StoreRepository "1" --> "*" Store : store
+'RoleRepository "1" --> "*" Role : role
+'EmployeeRepository "1" --> "*" Employee : employee
+
+'ManageStoreRepository "1" --> "*" Store : store
+'ManageRoleRepository "1" --> "*" Role : role
+'ManageEmployeeRepository "1" --> "*" Employee : employee
+
+
+'Employee "*" --> "1" Store
+'Employee "1" --> "1..*" Role
+
+
+
+
+
+
+
+
+
+
+
+@enduml

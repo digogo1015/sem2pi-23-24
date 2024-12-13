@@ -1,0 +1,61 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+class ListDealsUI {}
+
+class ListDealsController{
++listAllDeals(sortMethod, ascendingOrDescending)
+}
+
+class Repositories{
++getInstance
++getAdvertisementRepository
+}
+
+class AdvertisementRepository{
+-List<Advertisement> AdvertisementList
+
++getAllDeals()
++getAreaList(dealList, sortMethod, ascendingOrDescending)
+}
+
+class RadixSort{
++sort(areaList)
+}
+
+class BubbleSort{
++sort(areaList)
+}
+
+class Advertisement{
+-String dateOfAdvertisement
+-Request request
+-Commission commission
+-ArrayList<PurchaseOrder> purchaseOrderList
+-ArrayList<VisitRequest> visitRequestList
+-String status
+-Store store
+
++getEmployeeByEmail()
++getVisitRequestAdvertisement(visit request)
+}
+
+ListDealsUI ..> ListDealsController
+ListDealsController ..> AdvertisementRepository
+ListDealsController ..> Repositories
+
+AdvertisementRepository "1"-->"*" Advertisement
+AdvertisementRepository ..> BubbleSort
+AdvertisementRepository ..> RadixSort
+
+ListDealsController ..> Advertisement
+Repositories --> "1"AdvertisementRepository
+
+
+
+@enduml

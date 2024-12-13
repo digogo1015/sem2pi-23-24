@@ -1,0 +1,72 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US008
+
+autonumber
+
+actor "Agent" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : asks to view the\n agent's requests list
+        activate System
+
+        System --> User : displays requests list
+        deactivate System
+
+    User -> System : selects one request
+        activate System
+
+        System --> User : shows request and asks for validation
+        deactivate System
+
+
+
+    alt request is validated
+
+    User -> System : validates request
+    activate System
+
+        System --> User : displays commission types
+        deactivate System
+
+    User -> System : selects commission type
+        activate System
+
+            System --> User : requests data (commission value)
+        deactivate System
+
+    User -> System : types requested data and submits
+
+   activate System
+
+   System --> User : Shows operation success
+   deactivate System
+
+
+
+
+    else request is rejected
+
+    User --> System : rejects request
+    activate System
+
+
+    System --> User : requests data (rejection justification)
+    deactivate System
+
+    User -> System : types request data and submits
+    activate System
+
+    System --> User : shows operation success
+    deactivate System
+
+    end
+
+
+
+@enduml

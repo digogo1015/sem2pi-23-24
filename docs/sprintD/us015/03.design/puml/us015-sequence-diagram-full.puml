@@ -1,0 +1,76 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Sequence Diagram (SD) - US 015
+
+autonumber
+
+actor "Agent" as User
+participant ":ListBookingRequestUI" as UI
+participant ":ListBookingRequestController" as Controller
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "advertisementRepository:\nAdvertisementRepository" as AdvRep
+
+
+activate User
+
+    User -> UI : asks to list the property booking requests
+    activate UI
+
+        UI --> User : requests beginning and ending date
+    deactivate UI 
+
+    User -> UI : submits beginning and ending date
+    activate UI
+
+    UI -> Controller ** : create
+
+    UI -> Controller : getVisitRequest(beginning date, ending date)
+    activate Controller
+    
+    Controller -> Repositories:getInstance()
+                    activate Repositories
+
+    Repositories--> Controller: repositories
+    deactivate Repositories
+
+    Controller -> repositories : getUserSession()
+    activate repositories
+
+    Controller -> repositories : UserSession
+        deactivate repositories
+
+    Controller -> repositories : getUserEmail()
+        activate repositories
+
+    repositories --> Controller : email
+    deactivate repositories
+
+    Controller -> repositories : getAdvertisementRepository()
+    activate repositories
+
+    repositories --> Controller : AdvertisementRepository
+    deactivate repositories
+
+    Controller -> AdvRep : getAgentAdvertisements(email)
+    activate AdvRep
+
+    AdvRep --> Controller : AgentAdvertisementList
+    deactivate AdvRep
+
+    Controller -> AdvRep : getVisitRequestList(AgentAdvertisementList,\nbeginning date, ending date)
+    activate AdvRep
+
+    AdvRep --> Controller : visitList
+    deactivate AdvRep
+
+    Controller --> UI : visitList
+
+        UI --> User: shows booking request list for specific period
+    deactivate UI 
+
+
+@enduml

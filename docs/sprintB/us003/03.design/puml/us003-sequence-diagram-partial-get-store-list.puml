@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":RegisterNewEmployeeController" as RegisterEmployeeController
+participant "manageStoreRepository:\nManageStoreRepository" as MaStore
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "storeRepository:\nStoreRepository" as StoreRep
+
+autonumber 3
+
+        -> RegisterEmployeeController : getStores()
+
+        autonumber 3.1
+
+
+       activate RegisterEmployeeController
+
+       group Get Store List
+
+       RegisterEmployeeController -> MaStore : getStores()
+               activate MaStore
+
+       MaStore -> Repositories : getInstance()
+       activate Repositories
+
+       Repositories --> MaStore : repositories
+       deactivate Repositories
+
+       MaStore -> repositories : getStoreRepository()
+       activate repositories
+
+       repositories --> MaStore : storeRepository
+       deactivate repositories
+
+       MaStore -> StoreRep : getStores()
+       activate StoreRep
+
+       StoreRep --> MaStore : storeList
+       deactivate StoreRep
+
+       MaStore --> RegisterEmployeeController : storeList
+       deactivate MaStore
+
+       end
+       autonumber 4
+
+       <-- RegisterEmployeeController : storeList
+       deactivate RegisterEmployeeController
+@enduml

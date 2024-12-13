@@ -1,0 +1,156 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+
+skinparam classAttributeIconSize 0
+
+class RegisterEmployeeUI{
+}
+
+class RegisterEmployeeController {
++getStores()
++getRoles()
++registerEmployee(employee)
++getRoleByDesignation(roleDescription)
++getStoreByDesignation(storeDesignation)
+}
+
+class Repositories{
++getInstance()
++getEmployeeRepository()
++getStoreRepository()
++getRoleRepository()
+}
+
+class RoleRepository{
+-List<Role> RoleList
++copy()
++getRoleByDesignation(designation)
+}
+
+class EmployeeRepository{
+-List<Employee> employeeList
++registerEmployee(employee)
++validateEmployee(employee)
++addEmployee(employee)
+}
+
+class PasswordValidator{
++generatePassword()
+}
+
+Interface Employee{
++getPerson()
+}
+
+class Agent{
+-EmployeeInfo employee
+}
+class NetworkManager{
+-EmployeeInfo employee
+}
+class StoreManager{
+-EmployeeInfo employee
+}
+class SystemAdministrator{
+-EmployeeInfo employee
+}
+
+class EmployeeInfo{
++EmployeeInfo(person, store, role)
++createEmployee(person, StoreByDesignation, RoleByDesignation)
++validateInfo(person, StoreByDesignation, RoleByDesignation)
++getPerson()
+}
+
+class PersonInfo{
+-String name
+-String telephoneNumber
+-String email
+
++PersonInfo(name, telephoneNumber, email, address, passportCard, socialSecurityCard)
++getInfo()
++validateInfo(name, telephoneNumber, email)
++createPerson(name, telephoneNumber, email, address, passportCard, socialSecurityCard)
++getEmail()
+}
+
+class DataBase{
++sendEmail()
++saveUsers()
+}
+
+class StoreRepository{
+-List<Store> StoreList
++copy()
++getStoreByDesignation()
+}
+
+class Store{
+-Address address
+-String designation
+-String email
+-String telephoneNumber
+}
+
+class Role{
+-String designation
+}
+
+class Address{
+-String street
+-String city
+-String district
+-String state
+}
+
+class PassportCard{
+-String number
+}
+
+class SocialSecurityCard{
+-String taxNumber
+}
+
+
+RegisterEmployeeUI ..> RegisterEmployeeController
+
+RegisterEmployeeController ...> Repositories
+RegisterEmployeeController ...> EmployeeRepository
+RegisterEmployeeController ...> RoleRepository
+RegisterEmployeeController ...> StoreRepository
+RegisterEmployeeController .....> Store
+RegisterEmployeeController .....> Role
+
+Repositories --->"1" EmployeeRepository
+Repositories --l->"1" StoreRepository
+Repositories -->"1" RoleRepository
+
+RoleRepository "1"->"1..*" Role
+StoreRepository "1"->"1..*" Store
+EmployeeRepository "1"-->"1..*" Employee
+
+EmployeeRepository ..> DataBase
+EmployeeRepository ..> PasswordValidator
+
+Agent ..|> Employee
+NetworkManager ..|> Employee
+StoreManager ..|> Employee
+SystemAdministrator ..|> Employee
+
+Agent --> EmployeeInfo
+NetworkManager --> EmployeeInfo
+StoreManager --> EmployeeInfo
+SystemAdministrator --> EmployeeInfo
+
+EmployeeInfo "1" --> "1" Store
+EmployeeInfo "1" --> "1..*" Role
+EmployeeInfo "1" ---> "1" PersonInfo
+
+PersonInfo "1" --> "1" Address
+PersonInfo "1" --> "1" PassportCard
+PersonInfo "1" --> "1" SocialSecurityCard
+
+@enduml

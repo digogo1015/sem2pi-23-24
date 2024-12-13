@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+
+actor "Agent" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : asks to see the purchase order list of properties\nassigned to the agent
+        activate System
+
+        System --> User : displays purchase order list
+        deactivate System
+
+    User -> System : selects one purchase order
+        activate System
+
+        System --> User : shows purchase order and asks if approved or rejected
+        deactivate System
+
+    User -> System : selects if approved or rejected
+        activate System
+
+    alt purchase order is rejected
+
+        System --> User : notifies client and confirms success of operation
+
+    else purchase order is approved
+
+        System --> User : notifies clients, declines remaining orders for advertisement\nand confirms success of operation
+        deactivate System
+
+    end
+
+@enduml

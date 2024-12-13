@@ -1,0 +1,138 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+
+skinparam classAttributeIconSize 0
+
+class MakeAdvertisementUI {}
+class MakeAdvertisementController {
+    + MakeAdvertisementController()
+    + getAdvertisement()
+    + registerClient(client, password)
+    + submitAdvertisement(price, area, distCityCenter, address, \nphotograph, numberOfBedrooms, numberOfBathrooms, \n numberOfParkingSpaces, equipmentDesignation, sunExposure, \n basement, loft, typeOfBusiness, typeOfProperty, typeOfCommission, commissionValue, agent)
+}
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getAdvertisementRepository()
+    + getEmployeeRepository()
+    + getClientRepository()
+    + getAuthenticationRepository()
+}
+class ManageAdvertisementRepository{
+    + manageAdvertisementRepository(advertisementRepository)
+    + createProperty(price, area, distCityCenter, address, \nphotograph, numberOfBedrooms, numberOfBathrooms, \n numberOfParkingSpaces, equipmentDesignation, sunExposure, \n basement, loft, typeOfBusiness, typeOfProperty)
+    + createRequest(property, agent, dateOfRequest)
+    + createAdvertisement( request, typeOfCommission, commissionValue,\ndateOfAdvertisement)
+    - getDate()
+    - validateAdvertisement(advertisement)
+}
+class Advertisement {
+    - String dateOfAdvertisement
+    - Request request
+    - Commission commission
+    -ArrayList <PurchaseOrder> purchaseOrderList
+    + Advertisement(dateOfAdvertisement, request, commission,\npurchaseOrderList)
+}
+class Request{
+    - Property property
+    - Client client
+    - Employee agent
+    - String dateOfRequest
+    - String typeOfBusiness
+    - String price
+    - String status
+    + request(property, client, agent, dateOfRequest,\ntypeOfBusiness, price, status)
+}
+class Property{
+    - PropertyInfo property
+    - ResidenceInfo residence
+    - boolean basement
+    - boolean loft
+    - String sunExposure
+    + property(property, residence, basement, loft, sunExposure)
+}
+class AdvertisementRepository{
+    -List <Advertisement> advertisements
+    + setPurchaseOrderStatus(String status)
+}
+class EmployeeRepository{
+    +getEmployeeByEmail()
+}
+class ClientRepository{
+    +addClient()
+}
+class AuthenticationRepository{
+    +getCurrentUserSession()
+    +addUserWithRole()
+}
+class ManageEmployeeRepository{
+    +getEmployeeByEmail()
+}
+class ManageClientRepository{
+    +addClient(client)
+}
+class UserSession{
+    +getUserId()
+}
+class Employee {
+    - String name
+    - String telephoneNumber
+    - Email email
+    - PassportCard passportCardNumber
+    - SocialSecurityCard taxNumber
+    - Address address
+    - Store store
+    - Role role
+    + Employee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, store, role)
+}
+class Client {
+    - String name
+    - String telephoneNumber
+    - Email email
+    - PassportCard passportCardNumber
+    - SocialSecurityCard taxNumber
+    - Address address
+    + Employee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber)
+}
+class stupid{}
+hide stupid
+
+MakeAdvertisementUI --> MakeAdvertisementController
+
+MakeAdvertisementController ..> UserSession
+MakeAdvertisementController ..> stupid
+stupid ..> Repositories
+MakeAdvertisementController ...> Repositories : repositories
+MakeAdvertisementController ..> ManageAdvertisementRepository
+MakeAdvertisementController ..> ManageClientRepository
+MakeAdvertisementController ..> ManageEmployeeRepository
+
+ManageAdvertisementRepository ..> Repositories
+ManageEmployeeRepository ..> Repositories
+
+Repositories --> AdvertisementRepository
+Repositories --> EmployeeRepository
+Repositories --> ClientRepository
+Repositories -> Repositories : instance
+Repositories -> AuthenticationRepository
+
+UserSession <-- AuthenticationRepository
+ManageClientRepository <.. AuthenticationRepository
+ManageClientRepository --> ClientRepository
+ManageClientRepository ..> Client
+
+EmployeeRepository --> Employee
+ClientRepository --> Client
+
+AdvertisementRepository --> Advertisement
+Advertisement --> Request
+Request --> Property
+
+ManageAdvertisementRepository ..> AdvertisementRepository
+ManageAdvertisementRepository --> Advertisement
+ManageAdvertisementRepository ..> Request
+ManageAdvertisementRepository ..> Property
+
+@enduml

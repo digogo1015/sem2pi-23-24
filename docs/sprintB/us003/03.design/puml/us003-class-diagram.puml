@@ -1,0 +1,146 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+class Employee {
+    - String name
+    - String telephoneNumber
+    - Email email
+    - PassportCard passportCardNumber
+    - SocialSecurityCard taxNumber
+    - Address address
+    '- Store store
+    '- Role role
+
+    + Employee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, store, role)
+}
+
+class Store {
+    - String designation
+    - String telephoneNumber
+    - Email email
+    - Address address
+
+    + Store(designation, emailAddress, address, telephoneNumber)
+}
+
+class Role {
+    - String designation
+
+    + Role(designation)
+}
+
+
+class StoreRepository {
+    + getStoreByOption(storeOption)
+    + getStores()
+}
+
+class RoleRepository {
+    + getRoleByOption(roleOption)
+    + getRoles()
+}
+
+class EmployeeRepository {
+    -addEmployee(employee)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getRoleRepository()
+    + getStoreRepository()
+    + getEmployeeRepository()
+}
+
+class RegisterNewEmployeeController {
+    + RegisterNewEmployeeController()
+    + getStores()
+    + getRoles()
+    + registerEmployee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, storeOption, roleOption)
+
+}
+
+class RegisterEmployeeUI {
+}
+
+class ManageStoreRepository {
+    + ManageStoreRepository(storeRepository)
+    + getStores()
+    - getStoreByOption(storeOption)
+
+}
+
+class ManageRoleRepository {
+    + ManageRoleRepository(roleRepository)
+    + getRoles()
+    - getRoleByOption(roleOption)
+}
+
+
+class ManageEmployeeRepository {
+    + ManageEmployeeRepository(employeeRepository)
+    + registerEmployee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, store, role)
+    -validateEmployee(employee)
+    -createCredentials()
+    -sendCredentials(email, password)
+}
+
+
+RegisterEmployeeUI .down.> RegisterNewEmployeeController
+
+Repositories -> Repositories : instance
+
+RegisterNewEmployeeController ...> ManageEmployeeRepository
+RegisterNewEmployeeController ...> ManageRoleRepository
+RegisterNewEmployeeController ...> ManageStoreRepository
+
+ManageStoreRepository ..> Repositories : repositories
+ManageRoleRepository ..> Repositories : repositories
+ManageEmployeeRepository ..> Repositories : repositories
+
+
+ManageStoreRepository ....> StoreRepository : StoreRepository
+ManageRoleRepository ...> RoleRepository : RoleRepository
+ManageEmployeeRepository ....> EmployeeRepository : EmployeeRepository
+
+
+
+
+Repositories --> "1" StoreRepository
+Repositories ---> "1" RoleRepository
+Repositories --> "1" EmployeeRepository
+
+
+
+
+
+
+StoreRepository "1" --> "*" Store : store
+RoleRepository "1" --> "*" Role : role
+EmployeeRepository "1" --> "*" Employee : employee
+
+ManageStoreRepository "1" --> "*" Store : store
+ManageRoleRepository "1" --> "*" Role : role
+ManageEmployeeRepository "1" --> "*" Employee : employee
+
+
+Employee "*" --> "1" Store
+Employee "1" --> "1..*" Role
+
+
+
+
+
+
+
+
+
+
+
+@enduml

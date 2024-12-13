@@ -1,0 +1,235 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title UI Sequence Diagram (SSD) - US008
+
+autonumber
+
+actor "Agent" as User
+participant ":ManageRequestsUI" as UI
+participant ":ManageRequestsController" as Controller
+participant "manageRequestRepository:\nManageRequestRepository" as MaReq
+participant "manageFilterRepository:\nManageFilterRepository" as MaFil
+participant "manageAdvertisementRepository:\nManageAdvertisementRepository" as MaAdv
+participant "authenticationRepository:\AuthenticationRepository" as AuRep
+participant "authFacade:\AuthFacade" as Facade
+participant "currentSession\n:UserSession" as UserSession
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "requestRepository:\nRequestRepository" as ReqRep
+participant "filterRepository:\nFilterRepository" as FilRep
+participant "commission:\nCommission" as Com
+participant "advertisement:\nAdvertisement" as Adv
+participant "advertisementRepository:\nAdvertisementRepository" as AdvRep
+
+activate User
+
+    User -> UI : asks to view the\n agent's requests list
+        activate UI
+
+        UI->Controller** : create
+
+
+
+                UI -> Controller : getAgentRequests()
+                activate Controller
+
+                Controller ->Repositories:getInstance()
+                activate Repositories
+
+                Repositories-->Controller:repositories
+                deactivate Repositories
+
+                Controller -> repositories :getAuthenticationRepository()
+                activate repositories
+
+                repositories --> Controller :AuthenticationRepository
+                deactivate repositories
+
+                Controller --> AuRep : getCurrentUserSession()
+                activate AuRep
+
+                AuRep -> Facade : getCurrentUserSession()
+                activate Facade
+
+                Facade -> UserSession : getUserId()
+                activate UserSession
+
+                UserSession --> Facade : email
+                deactivate UserSession
+
+                Facade--> AuRep : email
+                deactivate Facade
+
+                AuRep --> Controller : email
+                deactivate AuRep
+
+
+
+                Controller -> MaReq : getAgentRequest()
+                activate MaReq
+
+                MaReq ->Repositories:getInstance()
+                                activate Repositories
+
+                                Repositories-->MaReq:repositories
+                                deactivate Repositories
+
+                                MaReq -> repositories :getRequestRepository()
+                                activate repositories
+
+                                repositories --> MaReq :RequestRepository
+                                deactivate repositories
+
+                                MaReq -> ReqRep : getListOfRequests()
+                                activate ReqRep
+
+                                ReqRep --> MaReq : AgentRequestList
+                                deactivate ReqRep
+
+                                MaReq --> Controller : AgentRequestList
+                                deactivate MaReq
+
+                                Controller --> UI : AgentRequestList
+
+
+
+                deactivate Controller
+
+
+        UI --> User : displays requests list
+        deactivate UI
+
+    User -> UI : selects one request
+        activate UI
+
+        UI --> User : shows request and asks for validation
+        deactivate UI
+
+
+
+    alt request is validated
+
+    User -> UI : validates request
+    activate UI
+
+
+    UI -> Controller : getListOfTypeOfCommission()
+    activate Controller
+
+    Controller -> MaFil : getListOfCommission()
+    activate MaFil
+
+    MaFil ->Repositories:getInstance()
+                    activate Repositories
+
+                    Repositories-->MaFil:repositories
+                    deactivate Repositories
+
+                    MaFil -> repositories :getFilterRepository()
+                    activate repositories
+
+                    repositories --> MaFil :FilterRepository
+                    deactivate repositories
+
+                    MaFil -> FilRep : getListOfCommission()
+                    activate FilRep
+
+                    FilRep --> MaFil : CommissionTypeList
+                    deactivate FilRep
+
+                    MaFil --> Controller : CommissionTypeList
+                    deactivate MaFil
+
+                    Controller --> UI : CommissionTypeList
+                    deactivate Controller
+
+
+
+
+
+        UI --> User : displays commission types
+        deactivate UI
+
+    User -> UI : selects commission type
+        activate UI
+
+            UI --> User : requests data (commission value)
+        deactivate UI
+
+    User -> UI : types requested data and submits
+   activate UI
+
+   UI -> Controller : addAdvertisement(request, commissionType, commissionValue)
+   activate Controller
+
+   Controller -> Com** : create commission (commissionType, commissionType)
+
+   Controller -> MaAdv : addAdvertisement(request, commission)
+   activate MaAdv
+
+   MaAdv -> Adv** : create(request, commission)
+
+   MaAdv -> Repositories : getInstance()
+   activate Repositories
+
+   Repositories --> MaAdv : repositories
+   deactivate Repositories
+
+   MaAdv -> repositories : getAdvertisementRepository()
+   activate repositories
+
+   repositories --> MaAdv : AdvertisementRepository
+   deactivate repositories
+
+   MaAdv -> AdvRep : addAdvertisement(advertisement)
+   activate AdvRep
+
+
+
+   AdvRep --> MaAdv : operation success
+   deactivate AdvRep
+
+   MaAdv --> Controller : operation success
+   deactivate MaAdv
+
+   Controller --> UI : operation success
+   deactivate Controller
+
+
+
+
+   UI --> User : Shows operation success
+   deactivate UI
+
+
+
+
+    else request is rejected
+
+    User --> UI : rejects request
+    activate UI
+
+
+    UI --> User : requests data (rejection justification)
+    deactivate UI
+
+    User -> UI : types request data and submits
+    activate UI
+
+    UI -> Controller : sendEmail(rejection justification)
+    activate Controller
+
+    Controller --> UI : operation success
+    deactivate Controller
+
+    UI --> User : shows operation success
+    deactivate UI
+
+    end
+
+
+
+@enduml

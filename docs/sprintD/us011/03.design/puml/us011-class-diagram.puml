@@ -1,0 +1,100 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+
+skinparam classAttributeIconSize 0
+
+class ManagePurchaseOrderUI {}
+class ManagePurchaseOrderController {
+    + ManagePurchaseOrderController()
+    + getAgent()
+    + getListOfAdvertisementsByAgent(Employee agent)
+    + getVisiblePurchaseOrders(ArrayList<PurchaseOrder> purchaseOrderList)
+}
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getAdvertisementRepository()
+    + getEmployeeRepository()
+    +getAuthenticationRepository()
+}
+class ManageAdvertisementRepository{
+    + ManageAdvertisementRepository(AdvertisementRepository)
+    + getListOfAdvertisements()
+    + getListOfAdvertisementsByAgent(Employee agent)
+    + getVisiblePurchaseOrders(ArrayList<PurchaseOrder> purchaseOrderList)
+    + displayPurchaseOrders()
+    + setPurchaseOrderStatus(String status)
+}
+class PurchaseOrder{
+    - Client client
+    - String dateOfRequest
+    - String price
+    - String status
+    + request(property, dateOfRequest, agent)
+}
+class Advertisement {
+    - String dateOfAdvertisement
+    - Request request
+    - Commission commission
+    -ArrayList <PurchaseOrder> purchaseOrderList
+    + Advertisement(dateOfAdvertisement, request, commission, purchaseOrderList)
+}
+class AdvertisementRepository{
+    -List <Advertisement> advertisements
+    + setPurchaseOrderStatus(String status)
+}
+class EmployeeRepository{
+    +getEmployeeByEmail()
+}
+class AuthenticationRepository{
+    +getCurrentUserSession()
+}
+class ManageEmployeeRepository{
+    +getEmployeeByEmail()
+}
+class UserSession{
+    +getUserId()
+}
+class Employee {
+    - String name
+    - String telephoneNumber
+    - Email email
+    - PassportCard passportCardNumber
+    - SocialSecurityCard taxNumber
+    - Address address
+    - Store store
+    - Role role
+    + Employee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, store, role)
+}
+
+ManagePurchaseOrderUI --> ManagePurchaseOrderController
+
+ManagePurchaseOrderController ..> ManageEmployeeRepository
+ManagePurchaseOrderController ..> UserSession
+ManagePurchaseOrderController ...> Repositories : repositories
+ManagePurchaseOrderController ..> ManageAdvertisementRepository
+
+ManageAdvertisementRepository ..> Repositories
+ManageEmployeeRepository ..> Repositories
+
+Repositories --> AdvertisementRepository
+Repositories --> EmployeeRepository
+Repositories -> Repositories : instance
+Repositories -> AuthenticationRepository
+
+UserSession <-- AuthenticationRepository
+
+EmployeeRepository --> Employee
+Employee --> PurchaseOrder : accepts or decline >
+
+AdvertisementRepository --> Advertisement
+Advertisement --> PurchaseOrder : has
+Advertisement<-Employee
+
+ManageAdvertisementRepository ..> AdvertisementRepository
+ManageAdvertisementRepository ..> Advertisement
+ManageAdvertisementRepository --> PurchaseOrder
+
+@enduml

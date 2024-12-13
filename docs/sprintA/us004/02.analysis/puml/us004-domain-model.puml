@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Owner {
+    name
+    citizenCard
+    taxNumber
+    address
+    emailAddress
+    telephoneNumber
+}
+
+class Agent {
+    name
+    email
+    telephoneNumber
+    agencyNumber
+}
+
+class Announcement {
+    commissionValue
+    area
+    location
+    distanceFromCityCentre
+    price
+    photograph
+    reaIdentifier
+    typeOfAdvertisement
+    typeOfProperty
+    typeOfCommission
+}
+
+Owner "*" -- "1" Agent: gives info >
+Agent "1" -- "*" Announcement : > publishes
+@enduml

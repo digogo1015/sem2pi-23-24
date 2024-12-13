@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 017
+
+autonumber
+
+actor "Network Manager" as NetworkManager
+participant ":System" as System
+
+activate NetworkManager
+
+    NetworkManager -> System : asks to list all deals made
+    activate System
+
+    System --> NetworkManager : displays sort methods and \n list order options(ascending/descending)
+    deactivate System
+
+    NetworkManager -> System : selects and submits data
+        activate System
+
+        System --> NetworkManager : display sorted deal list
+        deactivate System
+
+@enduml

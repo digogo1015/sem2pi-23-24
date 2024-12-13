@@ -1,0 +1,28 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 015
+
+autonumber
+
+actor "Agent" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to list the property booking requests
+    activate System
+
+        System --> Employee : requests beginning and ending date
+    deactivate System
+
+    Employee -> System : submits beginning and ending date
+    activate System
+
+        System --> Employee: shows booking request list for specific period
+    deactivate System
+
+
+@enduml

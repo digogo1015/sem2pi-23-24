@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 018
+
+autonumber
+
+actor "Store Manager" as StoreManager
+participant ":System" as System
+
+activate StoreManager
+
+    StoreManager -> System : asks to analyse deals
+    activate System
+
+    System --> StoreManager : requests data (type of linear regression)
+    deactivate System
+
+    StoreManager -> System : selects type of linear regression
+        activate System
+
+        alt type of linear regression = multiple regression
+
+        System --> StoreManager: requests data(confidence interval, area, distance to city center,\n number of bedrooms, number of bathrooms, number of parking spaces)
+
+
+        else
+
+                System --> StoreManager: requests data(confidence interval, independent variable in study,  spaces)
+                deactivate System
+        end
+
+        StoreManager -> System : types data
+        activate System
+
+        System --> StoreManager : shows linear regression operations list and asks to select one
+        deactivate System
+
+        StoreManager -> System : selects linear regression operation and submits
+        activate System
+
+        System --> StoreManager : shows linear regression operation
+        deactivate System
+
+
+
+@enduml

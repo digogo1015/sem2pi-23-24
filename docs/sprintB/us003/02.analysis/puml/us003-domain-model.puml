@@ -1,0 +1,60 @@
+ @startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class SystemAdministrator {
+
+}
+
+class Store {
+designation
+emailAddress
+telephoneNumber
+}
+class Employee {}
+
+class SystemAdministrator {}
+
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+
+class Role {
+designation
+}
+
+class SocialSecurityCard {
+taxNumber
+}
+
+class Passport {
+number
+}
+
+class Address{
+state
+district
+city
+}
+
+Employee"*" - "1"Store: assigned to >
+Employee"*" - "1"SystemAdministrator: registers <
+Address"1" -- "1"Store: located at <
+Role"1" -- "*"Employee: defines >
+Role <|-- SystemAdministrator
+Person"1" -up- "1"Passport: possesses >
+Person"*" -- "1"Address: lives at >
+Person"1" -l- "1"SocialSecurityCard: possesses >
+Person <|-r- Employee
+SystemAdministrator"1" -- "*"Store: registers >
+
+
+@enduml

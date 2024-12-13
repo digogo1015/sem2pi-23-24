@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 14
+
+participant "manageAdvertisementRepository\n:ManageAdvertisementRepository" as manageAdvertisement
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "advertisementRepository:\nAdvertisementRepository" as AdvertisementRepository
+
+
+-> manageAdvertisement : setStatus(status)
+autonumber 14.1
+activate manageAdvertisement
+
+    manageAdvertisement -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> manageAdvertisement: repositories
+            deactivate RepositorySingleton
+
+            manageAdvertisement -> PLAT : getPurchaseOrderRepository()
+            activate PLAT
+
+                PLAT --> manageAdvertisement: AdvertisementRepository
+            deactivate PLAT
+
+            manageAdvertisement -> AdvertisementRepository : setStatus(status)
+            activate AdvertisementRepository
+
+            AdvertisementRepository --> manageAdvertisement :
+            deactivate AdvertisementRepository
+
+            autonumber 15
+            <- manageAdvertisement : Purchase Order
+deactivate manageAdvertisement
+
+@enduml

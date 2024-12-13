@@ -1,0 +1,26 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client {
+
+}
+
+class Advertisement {
+    area
+    price
+    location
+    photographs
+    TypeOfBusiness
+    distanceCityCentre
+
+}
+
+Client "1" -- "*" Advertisement: consults >
+@enduml

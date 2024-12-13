@@ -1,0 +1,44 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+    Agent -> System : Asks to create a new property advertisement
+    activate System
+
+        System --> Agent : Shows list of agents and Advertisement's selected data (Type of Property,type of business, type of\n commission)  and asks to select the data
+    deactivate System
+
+    Agent -> System : Selects data required
+    activate System
+        System --> Agent : Requests data(price, area, distance to city center, address, photographs(linkURI), commission value)
+    deactivate System
+
+    Agent -> System : Types requested data
+    activate System
+alt typeOfProperty = House || Apartment
+        System --> Agent : Asks user to type remaining data (nBedrooms, nBathRooms, nParkingSpaces,\n EquipmentDesignation).
+    deactivate System
+
+    Agent -> System : Submits data
+    activate System
+alt typeOfProperty = House
+        System --> Agent : Asks user to type remaining data (SunExposure, Basement, Loft).
+    deactivate System
+
+    Agent -> System : Submits data
+    activate System
+end
+end
+        System --> Agent : Shows operation success
+    deactivate System
+@enduml

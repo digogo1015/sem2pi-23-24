@@ -1,0 +1,118 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class CreateAdvertisementForPropertyUI {}
+
+class CreateAdvertisementForPropertyController {
+    + CreateAdvertisementForPropertyController()
+    + getAgent()
+    + getTypeOfBusiness()
+    + getTypeOfProperty()
+    + getTypeOfCommission()
+    + submitAdvertisement(price, area, distCityCenter, address, \nphotograph, numberOfBedrooms, numberOfBathrooms, \n numberOfParkingSpaces, equipmentDesignation, sunExposer, \n basement, loft, typeOfBusiness, typeOfProperty, typeOfCommission, commissionValue, agent)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getAdvertisementRepository()
+    + getEmployeeRepository()
+    + getTypeOfBusinessRepository()
+    + getTypeOfPropertyRepository()
+    + getTypeofCommissionRepository()
+}
+class ManageEmployeeRepository{
+    + manageEmployeeRepository(employeeRepository)
+    + getAgents()
+    - filterByRole(agent)
+}
+
+class ManageAdvertisementRepository{
+    + manageAdvertisementRepository(advertisementRepository)
+    + createProperty(price, area, distCityCenter, address, \nphotograph, numberOfBedrooms, numberOfBathrooms, \n numberOfParkingSpaces, equipmentDesignation, sunExposer, \n basement, loft, typeOfBusiness, typeOfProperty)
+    + createRequest(property, agent, dateOfRequest)
+    {method}+ createAdvertisement( request, typeOfCommission, commissionValue, dateOfAdvertisement)
+    - getDate()
+    {method}- validateAdvertisement(advertisement)
+    }
+class AdvertisementRepository{
+    - addAdvertisement(advertisement)
+}
+
+class Request{
+    - Property property
+    - String dateOfRequest
+    - Agent agent
+    + request(property, dateOfRequest, agent)
+}
+class Advertisement{
+    -Request request
+    -double commissionValue
+    -String dateOfAdvertisement
+    -TypeOfCommission typeOfCommission
+}
+class Property{
+    - double price
+    - double area
+    - double distCityCenter
+    - Address address
+    - Photograph photograph
+    - int numberOfBathrooms
+    - int numberOfBedrooms
+    - int numberOfParkingSpaces
+    - Equipment equipment
+    - String sunExposer
+    - boolean basement
+    - boolean loft
+    - TypeOfBusiness typeOfBusiness
+    - TypeOfProperty typeOfProperty
+}
+
+class Employee {
+    - String name
+    - String telephoneNumber
+    - Email email
+    - PassportCard passportCardNumber
+    - SocialSecurityCard taxNumber
+    - Address address
+    '- Store store
+    '- Role role
+
+    + Employee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, store, role)
+}
+
+
+CreateAdvertisementForPropertyUI --> CreateAdvertisementForPropertyController
+
+CreateAdvertisementForPropertyController ..> ManageEmployeeRepository
+CreateAdvertisementForPropertyController ..> ManageAdvertisementRepository
+
+ManageEmployeeRepository ..> Repositories
+ManageAdvertisementRepository ..> Repositories
+
+Repositories --> AdvertisementRepository
+Repositories --> EmployeeRepository
+
+EmployeeRepository --> Employee
+
+ManageAdvertisementRepository ..> AdvertisementRepository
+ManageAdvertisementRepository --> Advertisement
+
+AdvertisementRepository --> Advertisement
+
+Advertisement --> Request
+
+Request --> Property
+
+ManageAdvertisementRepository ..> Property
+ManageAdvertisementRepository ..> Request
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+skinparam packageStyle rectangle
+
+left to right direction
+    actor "Unregistered User"
+    actor "Agent"
+    actor "System Administrator"
+    actor "Owner"
+
+rectangle {
+    usecase "UC1 - Consult List of Properties" as UC1
+    usecase "UC2 - Create Property Announcement" as UC2
+    usecase "UC3 - Register a new Employee" as UC3
+    usecase "UC4 - Request Announcement Choosing the Agent" as UC4
+    usecase "UC5 - Register new Store" as UC5
+    usecase "UC6 - Specify States, Districts and Cities" as UC6
+    "Unregistered User" --> UC1
+    "Agent" --> UC2
+    "System Administrator" --> UC3
+    "Owner" --> UC4
+    "System Administrator" --> UC5
+    "System Administrator" --> UC6
+}
+@enduml

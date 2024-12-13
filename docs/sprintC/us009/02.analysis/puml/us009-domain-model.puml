@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client{}
+
+class PropertyVisit{
+dateOfVisit
+}
+
+class Agent {}
+
+class VisitRequest{
+timeToStartVisit
+timeToEndVisit
+dateOfVisit
+dateOfRequest
+}
+
+class Person{
+name
+emailAddress
+telephoneNumber
+}
+
+VisitRequest"*" --right "1"Client: requests <
+VisitRequest"*" -- "1"Agent: validates <
+
+PropertyVisit"*" -- "1"Agent: organizes <
+PropertyVisit"*" --left "1"Client: participates in <
+
+Person <|---  Client
+
+@enduml

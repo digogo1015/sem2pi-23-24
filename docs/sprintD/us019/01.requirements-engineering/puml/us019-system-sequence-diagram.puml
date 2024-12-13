@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 019
+
+autonumber
+
+actor "Network Manager" as NetworkManager
+participant ":System" as System
+
+activate NetworkManager
+
+    NetworkManager -> System : asks to divide a set of stores
+    activate System
+
+    System --> NetworkManager : requests data (number os stores to be divided)
+    deactivate System
+
+    NetworkManager -> System : submits data
+        activate System
+
+        System --> NetworkManager : displays the two subsets of stores
+        deactivate System
+
+@enduml

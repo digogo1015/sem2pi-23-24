@@ -1,0 +1,107 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 009
+
+autonumber
+
+actor "Client" as Client
+participant ":System" as System
+
+activate Client
+
+
+    Client -> System : Asks to list properties
+    activate System
+
+    System --> Client : Displays properties by most recent order
+
+    opt Filters
+    deactivate System
+
+    Client -> System : Asks to filter properties
+    activate System
+
+            System --> Client : Displays sorting criteria list
+        deactivate System
+    alt sorting criteria
+            Client -> System : Selects sorting criteria
+        activate System
+    end
+        System --> Client : Displays type of property filter
+    deactivate System
+
+    alt type of property
+            Client -> System : Selects property filter
+        activate System
+    end
+        System --> Client : Displays type of business filter
+    deactivate System
+
+    alt type of business
+            Client -> System : Selects business filter
+        activate System
+    end
+
+        System --> Client : Displays number of rooms list
+    deactivate System
+    alt number of rooms
+            Client -> System : Selects number of bedrooms
+        activate System
+    end
+
+        System --> Client : Displays selected data
+    deactivate System
+
+        Client -> System : Submits data
+    activate System
+
+        System --> Client : Displays all properties that suit the filters
+    deactivate System
+
+    |||
+    end
+
+alt property
+        Client -> System : Selects a property
+    activate System
+end
+
+        System --> Client : Shows selected property
+    deactivate System
+
+    Client -> System : Asks to send a message to schedule a visit
+    activate System
+
+        System --> Client : Requests a date of visit
+    deactivate System
+
+    Client -> System : Types the year, month and day to visit
+    activate System
+
+         System --> Client : Requests a time to start the visit
+    deactivate System
+
+    Client -> System : Types hour and minute desired
+    activate System
+
+         System --> Client : Requests a time to end the visit
+    deactivate System
+
+    Client -> System : Types hour and minute desired
+    activate System
+
+        System --> Client : Displays message typed and asks to confirm
+    deactivate System
+
+    Client -> System : Submits request(name, phoneNumber,\n dateOfVisit, timeSlotStart, timeSlotStart, message)
+    activate System
+
+        System --> Client : Displays operation success
+    deactivate System
+
+deactivate Client
+
+@enduml

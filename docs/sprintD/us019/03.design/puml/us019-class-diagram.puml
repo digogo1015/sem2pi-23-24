@@ -1,0 +1,83 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam lineType polyline
+
+
+skinparam classAttributeIconSize 0
+
+class DivideStoresUI {}
+
+class DivideStoresController {
++getStores()
++divideStores(storeList)
++getPropertyNumbers(storeList)
+}
+
+class Repositories{
++getInstance()
++getAdvertisementRepository()
++getStoreRepository()
+}
+
+class AdvertisementRepository{
+-List<Advertisement> AdvertisementList
+
++getNumPropertiesByDesignation(designation)
+}
+
+class StoreRepository{
+-List<Store> StoreList
+
+-List<Store> storeList
++copy()
+}
+
+class BruteForce{
++sort(arr)
++formatBruteForce(arrString, storeList)
+}
+
+class Store{
+-Address address
+-String designation
+-String email
+-String telephoneNumber
+
++getDesignation()
++hasSameDesignation(designation)
+}
+
+class Advertisement{
+-String dateOfAdvertisement
+-Request request
+-Commission commission
+-ArrayList<PurchaseOrder> purchaseOrderList
+-ArrayList<VisitRequest> visitRequestList
+-String status
+
++getStore()
+}
+
+DivideStoresUI ..> DivideStoresController
+
+DivideStoresController ..> Repositories
+DivideStoresController ..> AdvertisementRepository
+DivideStoresController ..> StoreRepository
+
+Repositories --> "1"AdvertisementRepository
+Repositories --> "1"StoreRepository
+
+StoreRepository "1"-->"*" Store
+AdvertisementRepository "1"-->"*" Advertisement
+
+DivideStoresController ..>Store
+DivideStoresController ..> BruteForce
+
+Advertisement "1"-->"1" Store
+
+
+
+
+
+@enduml

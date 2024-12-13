@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class SystemAdministrator {
+
+}
+
+class Employee {
+    name
+    citizenCardNumber
+    taxNumber
+    address
+    emailAddress
+    telephoneNumber
+}
+
+class Role {
+
+}
+
+ class Store{
+     designation
+     location
+     emailAddress
+     telephoneNumber
+ }
+
+ Employee "1" --r "*" Store : assigned to >
+ Employee "1" --d "1" Role : classified in >
+ Employee "*" --l "1" SystemAdministrator :  registers <
+ SystemAdministrator "1" -- "1" Role : classifies <
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Us012
+
+autonumber
+
+actor "System Administrator" as SysAdmin
+participant ":System" as System
+
+activate SysAdmin
+
+    SysAdmin -> System : asks to import a new file
+    activate System
+
+        System --> SysAdmin : shows file's list
+    deactivate System
+
+    SysAdmin -> System : selects file
+    activate System
+
+        System --> SysAdmin : shows operation success
+    deactivate System
+
+
+@enduml

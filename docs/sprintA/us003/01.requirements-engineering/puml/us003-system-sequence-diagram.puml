@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US 003
+
+autonumber
+
+actor "System Administrator" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : Asks to register a new employee
+    activate System
+
+        System --> User : Requests data (name, citizen card number, tax number,\n address, email address, contact telephone number)
+    deactivate System
+
+    User -> System : Types requested data
+        activate System
+
+            System --> User : Shows each category list \n(employee's assigned agency and role)
+        deactivate System
+
+    User -> System : Select data required
+    activate System
+
+        System --> User : Shows requested and selected data
+    deactivate System
+
+    User -> System : Submits data
+    activate System
+
+        System --> User : Shows operation success
+    deactivate System
+@enduml

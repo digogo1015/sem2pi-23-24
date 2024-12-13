@@ -1,0 +1,59 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+autonumber
+
+participant "manageClient:\nManageClient" as MaClient
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "clientRepository:\nClientRepository" as ClientRep
+participant "client:\nClient" as Cli
+
+
+autonumber 7
+
+
+         -> MaClient : registerUser(name, passportCardNumber,\n taxNumber, address, email, telephoneNumber, password)
+        activate MaClient
+autonumber 7.1
+
+        group Register User
+
+        MaClient -> Cli** : registerUser(name, passportCardNumber,\n taxNumber, address, email, telephoneNumber)
+
+        MaClient -> MaClient : validateClient(client)
+
+        MaClient -> Repositories : getInstance()
+                              activate Repositories
+
+                              Repositories --> MaClient : repositories
+                              deactivate Repositories
+
+                              MaClient -> repositories : getClientRepository()
+                              activate repositories
+
+                             repositories --> MaClient : ClientRepository
+                             deactivate repositories
+
+                             MaClient -> ClientRep : addClient(client)
+                             activate ClientRep
+
+                             ClientRep --> MaClient
+                             deactivate ClientRep
+
+        end
+
+        autonumber 8
+                            <-- MaClient  : shows operation success
+                             deactivate MaClient
+
+
+
+
+
+@enduml

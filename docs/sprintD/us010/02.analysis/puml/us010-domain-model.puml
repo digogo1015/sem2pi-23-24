@@ -1,0 +1,48 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client{}
+
+class Agent {}
+
+class PurchaseOrder{
+dateOfPurchaseOrder
+value
+status
+}
+
+class Property {
+area
+distanceCityCentre
+}
+
+class Advertisement {
+dateOfAdvertisement
+status
+}
+
+class AdvertisementRequest {
+price
+dateOfRequest
+status
+}
+
+Client"*" -- "*"Advertisement: consults >
+Advertisement"*" - "1"Agent: responsible for <
+
+Client"1" --r "*"PurchaseOrder: requests >
+
+PurchaseOrder "*"-- "1"Advertisement : associated with >
+PurchaseOrder"*" --d "1" Agent: validates <
+AdvertisementRequest"1" --r "1" Advertisement: derives from <
+
+Property"1" --d "1"AdvertisementRequest: describes <
+
+@enduml

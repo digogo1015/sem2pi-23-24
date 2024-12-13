@@ -1,0 +1,61 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant "manageEmployeeRepository:\nManageEmployeeRepository" as MaEmp
+participant ":Repositories" as Repositories
+participant "repositories\n:Repositories" as repositories
+participant "employeeRepository:\nEmployeeRepository" as EmpRep
+participant "employee:\nEmployee" as Emp
+
+autonumber 19
+
+
+        -> MaEmp : registerEmployee(name, passport card number,\n tax number, address, email address,\n contact telephone number, store, role)
+
+        autonumber 19.1
+       activate MaEmp
+       group Register Employee
+
+      MaEmp -> Emp** : registerEmployee(name, passport card number,\n tax number, address, email address,\n contact telephone number,store, role)
+
+             MaEmp -> MaEmp : validateEmployee(employee)
+
+
+             MaEmp -> Repositories : getInstance()
+                                         activate Repositories
+
+                                         Repositories --> MaEmp : repositories
+                                         deactivate Repositories
+
+                                  MaEmp -> repositories : getEmployeeRepository()
+                                         activate repositories
+
+                                         repositories --> MaEmp : EmployeeRepository
+                                         deactivate repositories
+
+                           MaEmp -> EmpRep : addEmployee(employee)
+                           activate EmpRep
+
+                           EmpRep --> MaEmp
+                           deactivate EmpRep
+
+             MaEmp -> MaEmp : createCredentials()
+                            activate MaEmp
+
+                             MaEmp --> MaEmp : password
+                            deactivate MaEmp
+
+             MaEmp -> MaEmp : sendCredentials(email, password)
+
+
+
+       end
+       autonumber 20
+
+       <-- MaEmp : shows operation success
+       deactivate MaEmp
+@enduml

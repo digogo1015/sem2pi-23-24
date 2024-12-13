@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Client{}
+
+class PropertyVisit{
+dateOfVisit
+}
+
+class Agent {}
+
+class VisitRequest{
+timeToStartVisit
+timeToEndVisit
+dateOfVisit
+dateOfRequest
+}
+
+VisitRequest"*" --l "1"Client: requests <
+VisitRequest"*" --r "1"Agent: consults <
+
+PropertyVisit"*" --r "1"Agent: organizes <
+PropertyVisit"*" -- "1"Client: participates in <
+PropertyVisit "1" -- "1" VisitRequest : derives from >
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 7
+
+participant ":ManagePurchaseOrdersController" as CTRL
+participant "manageAdvertisementRepository\n:ManageAdvertisementRepository" as manageAdvertisement
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+
+
+-> CTRL : getVisiblePurchaseOrder(ArrayList<PurchaseOrder> PurchaseOrderList)
+        autonumber 7.1
+        activate CTRL
+        CTRL -> manageAdvertisement : getVisiblePurchaseOrder(ArrayList<PurchaseOrder> PurchaseOrderList)
+                        activate manageAdvertisement
+
+                            manageAdvertisement -> RepositorySingleton : getInstance()
+                            activate RepositorySingleton
+
+                            RepositorySingleton --> manageAdvertisement: repositories
+                            deactivate RepositorySingleton
+
+                            manageAdvertisement -> PLAT : getPurchaseOrderRepository
+                            activate PLAT
+
+                            PLAT --> manageAdvertisement: PurchaseOrderRepository
+                            deactivate PLAT
+
+                            manageAdvertisement -> manageAdvertisement : sortByStatus(String status)
+                            manageAdvertisement --> CTRL : VisiblePurchaseOrderList
+                            deactivate manageAdvertisement
+                            autonumber 8
+            <- CTRL : VisiblePurchaseOrderList
+        deactivate CTRL
+@enduml

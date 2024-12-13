@@ -1,0 +1,107 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class CreateRequestForPropertyUI {}
+
+class CreateRequestForPropertyController {
+    + CreateRequestForPropertyController()
+    + getAgent()
+    + getTypeOfBusiness()
+    + getTypeOfProperty()
+    + submitRequest(price, area, distCityCenter, address, \nphotograph, numberOfBedrooms, numberOfBathrooms, \n numberOfParkingSpaces, equipmentDesignation, sunExposer, \n basement, loft, typeOfBusiness, typeOfProperty, agent)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getRequestRepository()
+    + getEmployeeRepository()
+    + getTypeOfBusinessRepository()
+    + getTypeOfPropertyRepository()
+}
+class ManageEmployeeRepository{
+    + manageEmployeeRepository(employeeRepository)
+    + getAgents()
+    - filterByRole(agent)
+}
+
+class ManageRequestRepository{
+    + manageRequestRepository(requestRepository)
+    + createProperty(price, area, distCityCenter, address, \nphotograph, numberOfBedrooms, numberOfBathrooms, \n numberOfParkingSpaces, equipmentDesignation, sunExposer, \n basement, loft, typeOfBusiness, typeOfProperty)
+    + createRequest(property, agent, dateOfRequest)
+    - getDate()
+    - validateRequest
+    }
+class RequestRepository{
+    - addRequest(request)
+}
+
+
+class Request{
+    - Property property
+    - String dateOfRequest
+    - Agent agent
+    + request(property, dateOfRequest, agent)
+}
+
+class Property{
+    - double price
+    - double area
+    - double distCityCenter
+    - Address address
+    - Photograph photograph
+    - int numberOfBathrooms
+    - int numberOfBedrooms
+    - int numberOfParkingSpaces
+    - Equipment equipment
+    - String sunExposer
+    - boolean basement
+    - boolean loft
+    - TypeOfBusiness typeOfBusiness
+    - TypeOfProperty typeOfProperty
+}
+
+class Employee {
+    - String name
+    - String telephoneNumber
+    - Email email
+    - PassportCard passportCardNumber
+    - SocialSecurityCard taxNumber
+    - Address address
+    '- Store store
+    '- Role role
+
+    + Employee(name, passportCardNumber, taxNumber,\n address, emailAddress, telephoneNumber, store, role)
+}
+
+
+CreateRequestForPropertyUI --> CreateRequestForPropertyController
+
+CreateRequestForPropertyController ..> ManageEmployeeRepository
+CreateRequestForPropertyController ..> ManageRequestRepository
+
+ManageEmployeeRepository ..> Repositories
+ManageRequestRepository ..> Repositories
+
+Repositories --> RequestRepository
+Repositories --> EmployeeRepository
+
+EmployeeRepository --> Employee
+
+ManageRequestRepository ..> RequestRepository
+ManageRequestRepository --> Request
+
+RequestRepository --> Request
+
+Request --> Property
+
+ManageRequestRepository ..> Property
+@enduml

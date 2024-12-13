@@ -1,0 +1,66 @@
+@startuml
+skinparam packageStyle rectangle
+
+left to right direction
+    actor "Unregistered User"
+    actor "Agent"
+    actor "System Administrator"
+    actor "Owner"
+    actor "Client"
+    actor "Network Manager"
+    actor "Store Manager"
+
+rectangle {
+    usecase "UC1 - Consult List of Properties" as UC1
+    usecase "UC2 - Create Property Announcement" as UC2
+    usecase "UC3 - Register a new Employee" as UC3
+    usecase "UC4 - Request Announcement Choosing the Agent" as UC4
+    usecase "UC5 - Register new Store" as UC5
+    usecase "UC6 - Specify States, Districts and Cities" as UC6
+    usecase "UC7 - Registers as a client" as UC7
+    usecase "UC8 - Validate and post an announcement request" as UC8
+    usecase "UC9 - Send a message to schedule a visit" as UC9
+    usecase "UC10 - Place an order to purchase a property" as UC10
+    usecase "UC11 - Accept or decline purchase orders" as UC11
+    usecase "UC12 - Import CSV files from legacy systems" as UC12
+    usecase "UC13 - List employees working in every store" as UC13
+    usecase "UC14 - View the response to the visit schedule" as UC14
+    usecase "UC15 - List Booking Requests" as UC15
+    usecase "UC16 - Respond to Booking Requests" as UC16
+    usecase "UC16 - List deals made" as UC17
+    usecase "UC18 - Analyse deals" as UC18
+    usecase "UC19 - Divide all stores into two close subsets, by properties" as UC19
+    usecase "UC20 - Accept or decline appointment requests" as UC20
+    usecase "UC21 - Register visits done" as UC21
+
+    "Unregistered User" --> UC1
+    "Unregistered User" --> UC7
+
+    "Agent" --> UC2
+    "Agent" --> UC8
+    "Agent" --> UC11
+    "Agent" --> UC15
+    "Agent" --> UC16
+    "Agent" --> UC21
+
+
+    "System Administrator" --> UC3
+    "System Administrator" --> UC5
+    "System Administrator" --> UC6
+    "System Administrator" --> UC12
+
+    UC4 <-- "Owner"
+
+    "Client" --> UC9
+    "Client" --> UC10
+    "Client" --> UC14
+    "Client" --> UC20
+
+    UC13 <-- "Network Manager"
+    UC17 <-- "Network Manager"
+    UC19 <-- "Network Manager"
+
+    UC18 <-- "Store Manager"
+
+}
+@enduml

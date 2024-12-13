@@ -1,0 +1,22 @@
+sysadmin@this.app;admin
+legacy@client.app;client
+legacy@agent.app;agent
+sysadmin@this.app;admin
+legacy@client.app;client
+legacy@agent.app;agent
+netManager@netManager.app;itCC39F
+storeManager@storeManager.app;5V3K5NF
+sysadmin@this.app;admin
+legacy@client.app;client
+legacy@agent.app;agent
+agent1@agent.app;QpCY6X0
+sysadmin@this.app;admin
+legacy@client.app;client
+legacy@agent.app;agent
+Test email messagetest@example.com;password123
+Test email messagetest@example.com;password123
+Test email messagetest@example.com;password123
+Test email messagetest@example.com;password123
+sysadmin@this.app;admin
+legacy@client.app;client
+legacy@agent.app;agent
